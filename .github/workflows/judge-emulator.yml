@@ -1,0 +1,49 @@
+name: Judge browser emulator
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "index.html"
+      - "app.js"
+      - "styles.css"
+      - "video.html"
+      - "media/**"
+      - "evidence/**"
+      - "tools/judge_emulator.py"
+      - ".github/workflows/judge-emulator.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  emulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install browser emulator
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+      - name: Start public-site emulator
+        run: |
+          python -m http.server 8000 > /tmp/judge-static.log 2>&1 &
+          ready=0
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8000/ >/dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = "1" || { cat /tmp/judge-static.log; exit 1; }
+      - name: Emulate judge devices and interactions
+        run: python tools/judge_emulator.py
+      - name: Upload screenshots and audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: judge-emulator-report
+          retention-days: 14
+          path: build/judge-emulator/
