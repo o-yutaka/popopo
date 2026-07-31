@@ -4,14 +4,14 @@
 
 A working prototype for **Scripture in New Frontiers**. It detects meaningful moments across wearables, gaming, developer IDEs, social communities, and creator tools, then uses **Gloo AI Studio** to understand the human need and **YouVersion Platform API** to retrieve Scripture for a safe, native delivery moment.
 
-![Scripture Everywhere AI cover](media/cover.svg)
+![Scripture Everywhere AI cover](media/cover.png)
 
 ## Judge path
 
 1. **Public demo:** https://o-yutaka.github.io/popopo/
 2. **Timed three-minute story:** https://o-yutaka.github.io/popopo/video.html?autoplay=1
 3. **Public Kaggle notebook:** [`notebooks/scripture_everywhere_submission.ipynb`](notebooks/scripture_everywhere_submission.ipynb)
-4. **Media Gallery assets:** [`media/cover.svg`](media/cover.svg) and [`media/architecture.svg`](media/architecture.svg)
+4. **Media Gallery assets:** [`media/cover.png`](media/cover.png) and [`media/architecture.png`](media/architecture.png)
 5. **Live API evidence:** [`evidence/`](evidence/) — the JSON proof appears only after a real Gloo + YouVersion run succeeds.
 6. **Kaggle writeup and final checklist:** [`SUBMISSION.md`](SUBMISSION.md)
 
@@ -22,7 +22,7 @@ A runner reaches a difficult physiological moment: heart rate 170, effort 85%, e
 ```text
 Wearable context
   ↓
-Gloo AI Studio
+Gloo AI Studio Completions V2
   need: endurance
   theme: strength
   tone: concise
@@ -30,7 +30,7 @@ Gloo AI Studio
   ↓
 Theme allowlist → ISA.40.31
   ↓
-YouVersion Platform API
+YouVersion Platform passage API
   licensed Scripture passage
   ↓
 Delivery Policy
@@ -50,11 +50,13 @@ Connector Event
   ↓
 Typed Context Normalizer
   ↓
-Gloo AI Studio: need / bounded theme / tone / safety
+Gloo OAuth2 client credentials → short-lived bearer token
+  ↓
+Gloo Completions V2: need / bounded theme / tone / safety
   ↓
 Theme Allowlist → canonical USFM passage ID
   ↓
-YouVersion Platform API: passage retrieval
+YouVersion Platform: X-YVP-App-Key + passage retrieval
   ↓
 Delivery Policy: consent / crisis / timing / privacy / cooldown
   ↓
@@ -66,22 +68,32 @@ Wearable card / respawn screen / IDE margin / private review / creator overlay
 - Responsive static product demo
 - Exact 180-second recording experience
 - FastAPI orchestration backend
-- Typed Pydantic contracts
-- Separate Gloo and YouVersion clients
-- Official-style YouVersion passage retrieval by Bible ID and passage ID
+- Typed, strict Pydantic contracts
+- Official Gloo OAuth2 client-credentials exchange with required `api/access` scope
+- Gloo Completions V2 at `/ai/v2/chat/completions`
+- Short-lived bearer-token caching and refresh
+- Official YouVersion passage retrieval by Bible ID and canonical USFM passage ID
 - Deterministic credential-free judging fallback
 - Consent and crisis suppression policy
 - Public-social auto-post prevention
-- Automated tests and GitHub Actions CI
+- Automated API, OAuth, media, notebook, word-count, and video-duration tests
+- GitHub Actions CI, Pages deployment, video rendering, PNG rendering, and live-evidence workflows
 - Docker backend
-- Manual live-evidence workflow with public redacted proof
-- Complete Kaggle notebook and media assets
+- Complete Kaggle notebook and upload-ready PNG media assets
 
 ## Demo mode versus live mode
 
 The public interface remains reproducible without private credentials. It clearly demonstrates the same contracts and pipeline but must not be represented as proof of sponsor API execution.
 
-Live mode is enabled only when the required Gloo and YouVersion credentials are configured. The workflow in `.github/workflows/live-evidence.yml` then performs a real wearable request, requires `mode=live`, requires `scripture.source=youversion`, removes the full passage text and secrets, and commits a redacted evidence file.
+Live mode requires:
+
+```env
+GLOO_CLIENT_ID=...
+GLOO_CLIENT_SECRET=...
+YVP_APP_KEY=...
+```
+
+The evidence workflow exchanges the Gloo credentials for a short-lived OAuth2 token, calls Gloo Completions V2, retrieves the passage through YouVersion, requires `mode=live`, requires `gloo_auth_mode=oauth2_client_credentials`, requires `scripture.source=youversion`, removes the full passage text and all secrets, and commits a redacted evidence file.
 
 ## Run locally
 
@@ -124,20 +136,20 @@ pytest -q
 ## Repository map
 
 ```text
-index.html                              public interactive demo
-video.html                              exact 180-second recording experience
-app.js / styles.css                     five-frontier UI
-backend/app.py                          FastAPI orchestration
-backend/clients.py                      Gloo + YouVersion adapters
-backend/policy.py                       consent, crisis and privacy gates
-backend/tests/                          automated contract tests
+index.html                               public interactive demo
+video.html                               exact 180-second recording experience
+app.js / styles.css                      five-frontier UI
+backend/app.py                           FastAPI orchestration
+backend/clients.py                       Gloo OAuth2/V2 + YouVersion adapters
+backend/policy.py                        consent, crisis and privacy gates
+backend/tests/                           API, OAuth and submission-quality tests
 backend/scripts/capture_live_evidence.py redacted real-API proof
 notebooks/scripture_everywhere_submission.ipynb
-media/cover.svg                         Kaggle cover image
-media/architecture.svg                  architecture gallery image
-SUBMISSION.md                           writeup, links and submission gate
-VIDEO_RECORDING.md                      exact narration and recording process
-AUDIT.md                                first-place readiness audit
+media/cover.png                          Kaggle/YouTube cover image
+media/architecture.png                   architecture gallery image
+SUBMISSION.md                            writeup, links and submission gate
+VIDEO_RECORDING.md                       exact narration and recording process
+AUDIT.md                                 first-place readiness audit
 ```
 
 ## License
