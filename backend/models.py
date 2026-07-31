@@ -18,6 +18,9 @@ class ContextEvent(StrictModel):
     locale: str = Field(default="en", min_length=2, max_length=20)
     privacy: Privacy = "private"
     user_opted_in: bool = True
+    # Optional pseudonymous token used only for in-memory cooldown enforcement.
+    # Do not send a name, email address, device serial, or other direct identifier.
+    delivery_key: str | None = Field(default=None, min_length=8, max_length=128)
 
     @field_validator("metrics")
     @classmethod
@@ -41,6 +44,10 @@ class ScriptureResult(StrictModel):
     text: str
     passage_id: str | None = None
     bible_id: str | None = None
+    bible_abbreviation: str | None = None
+    bible_title: str | None = None
+    copyright: str | None = None
+    attribution_url: str | None = None
     source: Literal["youversion", "demo"]
 
 
@@ -49,9 +56,17 @@ class ExperienceResponse(StrictModel):
     discernment: Discernment
     scripture: ScriptureResult | None
     delivery_surface: str
+    delivery_timing: str
+    cooldown_seconds: int = Field(ge=0)
+    cooldown_enforced: bool
     suppressed: bool
     suppression_reason: str | None = None
     mode: Literal["live", "demo"]
     pipeline: list[str] = Field(default_factory=lambda: [
-        "context_normalized", "gloo_discernment", "youversion_passage", "delivery_policy"
+        "context_normalized",
+        "local_preflight_policy",
+        "gloo_oauth2_v2_discernment",
+        "theme_allowlist",
+        "youversion_passage",
+        "delivery_policy",
     ])
