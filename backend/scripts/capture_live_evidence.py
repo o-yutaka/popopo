@@ -12,6 +12,10 @@ BASE_URL = os.getenv("EVIDENCE_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 OUT = Path(os.getenv("EVIDENCE_OUTPUT", "evidence/live-api-evidence.json"))
 
 
+def _sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
 def main() -> None:
     event = {
         "source": "wearable",
@@ -20,8 +24,9 @@ def main() -> None:
         "locale": "en",
         "privacy": "private",
         "user_opted_in": True,
+        "delivery_key": "hackathon-demo-runner-001",
     }
-    with httpx.Client(timeout=45) as client:
+    with httpx.Client(timeout=60) as client:
         health = client.get(f"{BASE_URL}/health")
         health.raise_for_status()
         response = client.post(f"{BASE_URL}/v1/experience", json=event)
@@ -31,25 +36,44 @@ def main() -> None:
     data = response.json()
     if health_data.get("mode") != "live" or data.get("mode") != "live":
         raise RuntimeError("Evidence capture requires both APIs to be configured in live mode")
+    if health_data.get("partial_configuration") is not False:
+        raise RuntimeError("Evidence capture rejects partial sponsor configuration")
     if health_data.get("gloo_auth_mode") != "oauth2_client_credentials":
         raise RuntimeError("Public evidence requires the official Gloo OAuth2 client-credentials flow")
     if health_data.get("gloo_api_version") != "v2":
         raise RuntimeError("Public evidence requires Gloo Completions API v2")
+    if data.get("sponsor_calls_executed") != ["gloo", "youversion"]:
+        raise RuntimeError("The response did not prove both sponsor calls in order")
+    if data.get("cooldown_enforced") is not True:
+        raise RuntimeError("The wearable evidence event must prove cooldown enforcement")
 
     scripture = data.get("scripture") or {}
     if scripture.get("source") != "youversion":
         raise RuntimeError("YouVersion live source was not observed")
+    if not scripture.get("copyright"):
+        raise RuntimeError("YouVersion Bible attribution was not captured")
 
-    text = scripture.pop("text", "")
+    passage_text = scripture.pop("text", "")
+    if not passage_text:
+        raise RuntimeError("YouVersion returned no passage text")
+
+    request_evidence = dict(event)
+    delivery_key = request_evidence.pop("delivery_key")
+    request_evidence["delivery_key_sha256"] = _sha256(delivery_key)
+    response_context = data.get("context") or {}
+    if isinstance(response_context, dict):
+        response_context.pop("delivery_key", None)
+        response_context["delivery_key_sha256"] = _sha256(delivery_key)
+
     evidence = {
         "captured_at": datetime.now(timezone.utc).isoformat(),
-        "claim": "A wearable context event completed the live Gloo OAuth2/v2 -> YouVersion passage pipeline.",
+        "claim": "A consented wearable event completed the live Gloo OAuth2/v2 -> YouVersion passage -> delivery-policy pipeline.",
         "health": health_data,
-        "request": event,
+        "request": request_evidence,
         "response": data,
-        "scripture_text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
-        "scripture_text_length": len(text),
-        "redaction": "Client Secret, App Key, bearer token, raw headers, and full licensed passage text are not stored.",
+        "scripture_text_sha256": _sha256(passage_text),
+        "scripture_text_length": len(passage_text),
+        "redaction": "Client Secret, App Key, bearer token, raw delivery key, raw headers, and full licensed passage text are not stored.",
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
