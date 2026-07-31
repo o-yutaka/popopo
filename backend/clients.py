@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import time
@@ -19,6 +20,14 @@ THEME_PASSAGES: dict[str, tuple[str, str, str]] = {
     "peace": ("PHP.4.6-7", "Philippians 4:6–7", "Present your requests to God, and the peace of God will guard your hearts and minds."),
 }
 DEFAULT_THEME = "strength"
+DISCERNMENT_KEYS = {
+    "need",
+    "theme",
+    "tone",
+    "safe_to_deliver",
+    "public_delivery_allowed",
+    "rationale",
+}
 
 
 def _extract_json_object(content: str) -> str:
@@ -39,12 +48,7 @@ def _extract_json_object(content: str) -> str:
 
 
 class GlooClient:
-    """Official Gloo AI Studio client using OAuth2 client credentials.
-
-    Gloo credentials are exchanged for a short-lived bearer token. An optional
-    GLOO_ACCESS_TOKEN is accepted for local/manual testing, but production and
-    evidence workflows use GLOO_CLIENT_ID + GLOO_CLIENT_SECRET.
-    """
+    """Official Gloo AI Studio client using OAuth2 client credentials."""
 
     def __init__(self) -> None:
         self.client_id = os.getenv("GLOO_CLIENT_ID", "")
@@ -112,19 +116,12 @@ class GlooClient:
 
     async def discern(self, event: ContextEvent) -> Discernment:
         if not self.configured:
-            return self._demo_discernment(event)
+            return self.demo_discernment(event)
 
         prompt = {
-            "task": "Return one strict JSON object and no other text.",
+            "task": "Return exactly one JSON object and no other text.",
             "allowed_themes": sorted(THEME_PASSAGES),
-            "required_fields": [
-                "need",
-                "theme",
-                "tone",
-                "safe_to_deliver",
-                "public_delivery_allowed",
-                "rationale",
-            ],
+            "exact_keys": sorted(DISCERNMENT_KEYS),
             "rules": [
                 "Never diagnose medical or mental-health conditions.",
                 "Never claim divine certainty or that God caused an event.",
@@ -150,6 +147,7 @@ class GlooClient:
                 {"role": "user", "content": json.dumps(prompt)},
             ],
             "temperature": 0.1,
+            "max_tokens": 300,
         }
         async with httpx.AsyncClient(timeout=30) as client:
             response = await client.post(
@@ -161,7 +159,13 @@ class GlooClient:
         content = response_data["choices"][0]["message"]["content"]
         if not isinstance(content, str):
             raise ValueError("Gloo completion content was not a string")
-        result = Discernment.model_validate_json(_extract_json_object(content))
+        raw = json.loads(_extract_json_object(content))
+        if not isinstance(raw, dict):
+            raise ValueError("Gloo completion JSON was not an object")
+        missing = DISCERNMENT_KEYS - raw.keys()
+        if missing:
+            raise ValueError(f"Gloo completion omitted required fields: {sorted(missing)}")
+        result = Discernment.model_validate({key: raw[key] for key in DISCERNMENT_KEYS})
         if result.theme not in THEME_PASSAGES:
             result.theme = DEFAULT_THEME
             result.rationale = (
@@ -170,7 +174,7 @@ class GlooClient:
         return result
 
     @staticmethod
-    def _demo_discernment(event: ContextEvent) -> Discernment:
+    def demo_discernment(event: ContextEvent) -> Discernment:
         mapping = {
             "gaming": ("encouragement", "perseverance", "teammate"),
             "wearable": ("endurance", "strength", "concise"),
@@ -202,35 +206,64 @@ class YouVersionClient:
     def configured(self) -> bool:
         return bool(self.api_key and self.bible_id)
 
+    def demo_scripture(self, theme: str) -> ScriptureResult:
+        passage_id, reference, text = THEME_PASSAGES.get(
+            theme.lower(), THEME_PASSAGES[DEFAULT_THEME]
+        )
+        return ScriptureResult(
+            reference=reference,
+            text=text,
+            passage_id=passage_id,
+            bible_id=self.bible_id,
+            bible_abbreviation="DEMO",
+            bible_title="Credential-free demonstration excerpt",
+            copyright="Demo text only; live text and attribution come from YouVersion Platform.",
+            attribution_url="https://www.youversion.com/",
+            source="demo",
+        )
+
     async def find_scripture(self, theme: str, locale: str) -> ScriptureResult:
         passage_id, fallback_reference, fallback_text = THEME_PASSAGES.get(
             theme.lower(), THEME_PASSAGES[DEFAULT_THEME]
         )
         if not self.configured:
-            return ScriptureResult(
-                reference=fallback_reference,
-                text=fallback_text,
-                passage_id=passage_id,
-                bible_id=self.bible_id,
-                source="demo",
-            )
+            return self.demo_scripture(theme)
 
         headers = {
             "X-YVP-App-Key": self.api_key,
             "Accept-Language": locale,
             "Accept": "application/json",
         }
-        url = f"{self.base_url}/bibles/{self.bible_id}/passages/{passage_id}"
+        passage_url = f"{self.base_url}/bibles/{self.bible_id}/passages/{passage_id}"
+        bible_url = f"{self.base_url}/bibles/{self.bible_id}"
         async with httpx.AsyncClient(timeout=20) as client:
-            response = await client.get(url, headers=headers)
-            response.raise_for_status()
-            data: dict[str, Any] = response.json()
+            passage_response, bible_response = await asyncio.gather(
+                client.get(passage_url, headers=headers),
+                client.get(bible_url, headers=headers),
+            )
+            passage_response.raise_for_status()
+            bible_response.raise_for_status()
+            passage_data: dict[str, Any] = passage_response.json()
+            bible_data: dict[str, Any] = bible_response.json()
 
-        passage = data.get("data", data)
+        passage = passage_data.get("data", passage_data)
+        bible = bible_data.get("data", bible_data)
+        if not isinstance(passage, dict) or not isinstance(bible, dict):
+            raise ValueError("Unexpected YouVersion response contract")
+
         return ScriptureResult(
             reference=passage.get("reference", fallback_reference),
             text=passage.get("content", fallback_text),
             passage_id=passage.get("id", passage_id),
             bible_id=self.bible_id,
+            bible_abbreviation=bible.get("localized_abbreviation", bible.get("abbreviation")),
+            bible_title=bible.get("localized_title", bible.get("title")),
+            copyright=bible.get("copyright"),
+            attribution_url=(
+                bible.get("promotional_content")
+                or bible.get("publisher_url")
+                or bible.get("youversion_deep_link")
+                or "https://www.youversion.com/"
+            ),
             source="youversion",
         )
