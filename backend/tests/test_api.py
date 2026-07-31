@@ -66,3 +66,12 @@ def test_no_consent_means_no_delivery():
     body = response.json()
     assert body["suppressed"] is True
     assert body["suppression_reason"] == "user_not_opted_in"
+
+
+def test_unknown_consent_alias_is_rejected():
+    response = client.post("/v1/experience", json={
+        "source": "wearable",
+        "moment_type": "effort_peak",
+        "opted_in": True
+    })
+    assert response.status_code == 422
