@@ -18,7 +18,7 @@ def test_video_timeline_is_under_three_minutes_with_buffer():
 def test_video_has_native_interaction_and_clean_record_mode():
     html = (ROOT / "video.html").read_text(encoding="utf-8")
     assert "SIGNAL DETECTED" in html
-    assert "WAITING FOR RECOVERY" in html
+    assert "WAITING<br>FOR RECOVERY" in html
     assert "WRIST RAISED" in html
     assert "record-mode" in html
     assert ".record-mode .timer" in html
