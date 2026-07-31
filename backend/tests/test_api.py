@@ -11,6 +11,12 @@ def test_health_reports_both_required_apis():
     body = response.json()
     assert body["ok"] is True
     assert body["required_apis"] == ["Gloo AI Studio", "YouVersion Platform"]
+    assert body["gloo_auth_mode"] in {
+        "unconfigured",
+        "oauth2_client_credentials",
+        "manual_bearer_token",
+    }
+    assert body["gloo_api_version"] == "v2"
 
 
 def test_wearable_demo_returns_scripture_and_provenance():
