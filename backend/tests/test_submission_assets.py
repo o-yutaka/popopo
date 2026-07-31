@@ -29,7 +29,9 @@ def test_video_has_native_interaction_and_clean_record_mode():
 
 def test_video_proof_is_truthful_and_provenance_aware():
     html = (ROOT / "video.html").read_text(encoding="utf-8")
-    assert "sponsor_calls_executed" in html
+    assert "verified only when:" in html
+    assert 'sponsor_calls_executed = ["gloo", "youversion"]' in html
+    assert "18 tests passed" in html
     assert "LIVE SPONSOR PIPELINE VERIFIED" in html
     assert "evidence/live-api-evidence.json" in html
     assert "Demo mode remains visibly separate" in html
@@ -68,6 +70,9 @@ def test_media_gallery_sources_are_1600_by_900():
         assert "<desc" in svg
     cover = (ROOT / "media" / "cover.svg").read_text(encoding="utf-8")
     assert "Every Digital\n" not in cover
+    assert "in the Lord will renew" not in cover
+    assert "in the Lord will" in cover
+    assert "renew their strength." in cover
     assert "Demo excerpt" in cover
 
 
