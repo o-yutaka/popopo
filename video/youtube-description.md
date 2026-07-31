@@ -26,5 +26,5 @@ Scripture, Bible, AI, Gloo AI Studio, YouVersion, wearable AI, contextual AI, ha
 - Category: Science & Technology
 - Language: English
 - Captions: upload `captions.srt`
-- Thumbnail: export `media/cover.svg` as PNG if YouTube rejects SVG
+- Thumbnail: upload `media/cover.png`
 - Final duration: 3:00 maximum
