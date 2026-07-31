@@ -10,7 +10,10 @@ on:
       - "video.html"
       - "media/**"
       - "evidence/**"
+      - "backend/**"
+      - "notebooks/**"
       - "tools/judge_emulator.py"
+      - "tools/runtime_emulator.py"
       - ".github/workflows/judge-emulator.yml"
 
 permissions:
@@ -19,15 +22,18 @@ permissions:
 jobs:
   emulate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install browser emulator
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - name: Install browser, API, and notebook emulators
         run: |
-          pip install playwright
+          pip install -r backend/requirements.txt
+          pip install playwright pandas nbclient nbformat ipykernel
           playwright install --with-deps chromium
       - name: Start public-site emulator
         run: |
@@ -38,8 +44,25 @@ jobs:
             sleep 1
           done
           test "$ready" = "1" || { cat /tmp/judge-static.log; exit 1; }
+      - name: Start credential-free demo API
+        working-directory: backend
+        env:
+          GLOO_CLIENT_ID: ""
+          GLOO_CLIENT_SECRET: ""
+          GLOO_ACCESS_TOKEN: ""
+          YVP_APP_KEY: ""
+        run: |
+          uvicorn app:app --host 127.0.0.1 --port 8001 > /tmp/judge-api.log 2>&1 &
+          ready=0
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8001/health >/dev/null; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = "1" || { cat /tmp/judge-api.log; exit 1; }
       - name: Emulate judge devices and interactions
         run: python tools/judge_emulator.py
+      - name: Emulate API scenarios and execute notebook
+        run: python tools/runtime_emulator.py
       - name: Upload screenshots and audit report
         if: always()
         uses: actions/upload-artifact@v4
