@@ -1,0 +1,15 @@
+People already live through meaningful and difficult moments inside digital systems. A runner reaches exhaustion. A player fails again. A developer gets trapped in a build loop. But when the moment gets hard, Scripture is usually somewhere else.
+
+Scripture Everywhere AI changes that. It is one shared, context-aware intelligence layer for every digital frontier. It does not create five disconnected Bible apps. It turns each environment into a connector, then reuses the same discernment, Scripture retrieval, safety, and delivery system.
+
+Our main story follows one runner. Eighteen minutes into a difficult session, the wearable reports a heart rate of one hundred seventy and effort above eighty-five percent. The system recognizes a possible breakthrough wall, but it does not interrupt the runner mid-stride. It waits for a safe recovery window. Gloo AI Studio interprets the normalized context and returns a structured decision: the human need is endurance, the theme is strength, the tone should be concise, and delivery is safe. That bounded theme resolves to a canonical passage identifier. YouVersion Platform API retrieves the Scripture passage in the configured Bible and language. The delivery policy then chooses a quiet, private haptic cue. When the runner raises their wrist, the verse appears without taking them out of the experience.
+
+Technically, every moment follows four visible stages. First, a connector converts raw signals into one typed context contract. Second, Gloo AI Studio identifies need, bounded theme, tone, and safety eligibility. Third, the theme allowlist resolves to a canonical passage identifier and YouVersion supplies the Scripture text. Fourth, the delivery policy selects consent, timing, privacy, cooldown, and the native surface. The model never invents the Scripture text.
+
+Trust is part of the product, not an afterthought. Explicit opt-in is required. Crisis and self-harm signals suppress normal automated delivery and route to human support. Sensitive social moments never auto-post publicly. The system does not diagnose anyone or claim divine certainty. Every connector can be paused, dismissed, or disabled.
+
+The same brain can meet a player at a respawn screen, a developer after a failed build, a moderator through private human review, or a creator beside live chat controls. Only the connector and delivery surface change.
+
+This is a working, inspectable prototype built with FastAPI, typed contracts, separate Gloo and YouVersion clients, automated tests, continuous integration, a public notebook, and redacted live-evidence capture.
+
+Scripture should not wait in another app. The right word should meet people inside the moment itself.
