@@ -63,6 +63,7 @@ class ExperienceResponse(StrictModel):
     suppressed: bool
     suppression_reason: str | None = None
     mode: Literal["live", "demo"]
+    sponsor_calls_executed: list[Literal["gloo", "youversion"]] = Field(default_factory=list)
     pipeline: list[str] = Field(default_factory=lambda: [
         "context_normalized",
         "local_preflight_policy",
