@@ -2,6 +2,13 @@ name: Render three-minute submission video
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "video.html"
+      - "video/**"
+      - "tools/render_video.py"
+      - "tools/build_narration.py"
+      - ".github/workflows/render-video.yml"
 
 permissions:
   contents: read
@@ -24,7 +31,12 @@ jobs:
       - name: Start static demo
         run: |
           python -m http.server 8000 > /tmp/static-demo.log 2>&1 &
-          for i in {1..30}; do curl -fsS http://127.0.0.1:8000/video.html && break; sleep 1; done
+          ready=0
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8000/video.html; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = "1" || { cat /tmp/static-demo.log; exit 1; }
       - name: Record exact visual story
         run: python tools/render_video.py
       - name: Generate narration
@@ -53,5 +65,5 @@ jobs:
             build/scripture-everywhere-3min.mp4
             video/captions.srt
             video/youtube-description.md
-            media/cover.svg
-            media/architecture.svg
+            media/cover.png
+            media/architecture.png
