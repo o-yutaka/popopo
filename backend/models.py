@@ -1,12 +1,16 @@
 from typing import Literal
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 Source = Literal["gaming", "wearable", "ide", "social", "creator"]
 Privacy = Literal["private", "public"]
 
 
-class ContextEvent(BaseModel):
+class StrictModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class ContextEvent(StrictModel):
     source: Source
     moment_type: str = Field(min_length=1, max_length=80)
     metrics: dict[str, float | int | str] = Field(default_factory=dict)
@@ -23,7 +27,7 @@ class ContextEvent(BaseModel):
         return value
 
 
-class Discernment(BaseModel):
+class Discernment(StrictModel):
     need: str
     theme: str
     tone: str
@@ -32,7 +36,7 @@ class Discernment(BaseModel):
     rationale: str = ""
 
 
-class ScriptureResult(BaseModel):
+class ScriptureResult(StrictModel):
     reference: str
     text: str
     passage_id: str | None = None
@@ -40,7 +44,7 @@ class ScriptureResult(BaseModel):
     source: Literal["youversion", "demo"]
 
 
-class ExperienceResponse(BaseModel):
+class ExperienceResponse(StrictModel):
     context: ContextEvent
     discernment: Discernment
     scripture: ScriptureResult | None
