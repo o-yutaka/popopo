@@ -6,6 +6,8 @@ on:
     paths:
       - "video.html"
       - "video/**"
+      - "media/cover.svg"
+      - "media/architecture.svg"
       - "tools/render_video.py"
       - "tools/build_narration.py"
       - ".github/workflows/render-video.yml"
@@ -27,7 +29,13 @@ jobs:
           pip install playwright edge-tts
           playwright install --with-deps chromium
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg librsvg2-bin
+      - name: Regenerate upload-safe media
+        run: |
+          rsvg-convert -w 1600 -h 900 media/cover.svg > media/cover.png
+          rsvg-convert -w 1600 -h 900 media/architecture.svg > media/architecture.png
+          test -s media/cover.png
+          test -s media/architecture.png
       - name: Start static demo
         run: |
           python -m http.server 8000 > /tmp/static-demo.log 2>&1 &
@@ -37,32 +45,37 @@ jobs:
             sleep 1
           done
           test "$ready" = "1" || { cat /tmp/static-demo.log; exit 1; }
-      - name: Record exact visual story
+      - name: Record clean visual story
         run: python tools/render_video.py
       - name: Generate narration
         run: python tools/build_narration.py
-      - name: Mix exact 180-second MP4
+      - name: Mix validated 179-second MP4
         shell: bash
         run: |
+          TARGET=179
           AUDIO_DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 build/narration.mp3)
-          TEMPO=$(python -c "d=float('$AUDIO_DURATION'); print(max(0.5,min(2.0,d/180.0)))")
-          ffmpeg -y -ss 0.75 \
+          TEMPO=$(python -c "d=float('$AUDIO_DURATION'); print(max(0.5,min(2.0,d/$TARGET)))")
+          ffmpeg -y -ss 0.60 \
             -i build/scripture-everywhere.webm \
             -i build/narration.mp3 \
-            -filter_complex "[1:a]atempo=${TEMPO},apad=pad_dur=180,atrim=duration=180[a]" \
-            -map 0:v:0 -map "[a]" -t 180 \
+            -filter_complex "[1:a]atempo=${TEMPO},apad=pad_dur=${TARGET},atrim=duration=${TARGET}[a]" \
+            -map 0:v:0 -map "[a]" -t ${TARGET} \
             -c:v libx264 -preset medium -crf 18 -pix_fmt yuv420p \
             -c:a aac -b:a 192k -movflags +faststart \
             build/scripture-everywhere-3min.mp4
           DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 build/scripture-everywhere-3min.mp4)
-          python -c "d=float('$DURATION'); assert 179.5 <= d <= 180.1, f'Unexpected final duration: {d}'"
+          WIDTH=$(ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 build/scripture-everywhere-3min.mp4)
+          HEIGHT=$(ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 build/scripture-everywhere-3min.mp4)
+          python -c "d=float('$DURATION'); assert 178.8 <= d <= 179.1, f'Unexpected duration: {d}'; assert '$WIDTH' == '1920' and '$HEIGHT' == '1080'"
+          sha256sum build/scripture-everywhere-3min.mp4 > build/scripture-everywhere-3min.sha256
       - name: Upload submission package
         uses: actions/upload-artifact@v4
         with:
-          name: scripture-everywhere-youtube-package
+          name: scripture-everywhere-youtube-package-v2
           retention-days: 14
           path: |
             build/scripture-everywhere-3min.mp4
+            build/scripture-everywhere-3min.sha256
             video/captions.srt
             video/youtube-description.md
             media/cover.png
