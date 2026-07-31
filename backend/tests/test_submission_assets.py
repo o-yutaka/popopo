@@ -53,6 +53,8 @@ def test_kaggle_notebook_is_valid_v4_json():
     notebook = json.loads(path.read_text(encoding="utf-8"))
     assert notebook["nbformat"] == 4
     assert len(notebook["cells"]) >= 10
+    assert all(cell.get("id") for cell in notebook["cells"])
+    assert len({cell["id"] for cell in notebook["cells"]}) == len(notebook["cells"])
     joined = "\n".join(
         line
         for cell in notebook["cells"]
