@@ -10,18 +10,26 @@ jobs:
   capture:
     runs-on: ubuntu-latest
     env:
-      GLOO_API_KEY: ${{ secrets.GLOO_API_KEY }}
-      GLOO_BASE_URL: ${{ secrets.GLOO_BASE_URL }}
-      GLOO_MODEL: ${{ secrets.GLOO_MODEL }}
-      GLOO_CHAT_PATH: ${{ secrets.GLOO_CHAT_PATH }}
+      GLOO_CLIENT_ID: ${{ secrets.GLOO_CLIENT_ID }}
+      GLOO_CLIENT_SECRET: ${{ secrets.GLOO_CLIENT_SECRET }}
+      GLOO_TOKEN_URL: https://platform.ai.gloo.com/oauth2/token
+      GLOO_BASE_URL: https://platform.ai.gloo.com/ai/v2
+      GLOO_MODEL: ${{ vars.GLOO_MODEL || 'gloo-openai-gpt-5-mini' }}
+      GLOO_CHAT_PATH: /chat/completions
       YVP_APP_KEY: ${{ secrets.YVP_APP_KEY }}
-      YOUVERSION_BASE_URL: ${{ secrets.YOUVERSION_BASE_URL }}
-      YOUVERSION_BIBLE_ID: ${{ secrets.YOUVERSION_BIBLE_ID }}
+      YOUVERSION_BASE_URL: https://api.youversion.com/v1
+      YOUVERSION_BIBLE_ID: ${{ vars.YOUVERSION_BIBLE_ID || '3034' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Require sponsor credentials
+        shell: bash
+        run: |
+          test -n "$GLOO_CLIENT_ID" || { echo "Missing GLOO_CLIENT_ID secret"; exit 1; }
+          test -n "$GLOO_CLIENT_SECRET" || { echo "Missing GLOO_CLIENT_SECRET secret"; exit 1; }
+          test -n "$YVP_APP_KEY" || { echo "Missing YVP_APP_KEY secret"; exit 1; }
       - name: Install backend
         run: pip install -r backend/requirements.txt
       - name: Start API
@@ -29,7 +37,12 @@ jobs:
         run: |
           uvicorn app:app --host 127.0.0.1 --port 8000 > /tmp/scripture-api.log 2>&1 &
           echo $! > /tmp/scripture-api.pid
-          for i in {1..30}; do curl -fsS http://127.0.0.1:8000/health && break; sleep 1; done
+          ready=0
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8000/health; then ready=1; break; fi
+            sleep 1
+          done
+          test "$ready" = "1" || { cat /tmp/scripture-api.log; exit 1; }
       - name: Capture redacted proof
         run: python backend/scripts/capture_live_evidence.py
       - name: Commit proof
