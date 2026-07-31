@@ -2,35 +2,86 @@
 
 **One Brain. Every Digital Moment.**
 
-A working hackathon prototype for **Scripture in New Frontiers**. It detects meaningful moments across gaming, wearables, coding, social spaces, and creator tools, then uses **Gloo AI Studio** to understand the human need and **YouVersion Platform API** to retrieve Scripture that fits the moment.
+A working prototype for **Scripture in New Frontiers**. It detects meaningful moments across wearables, gaming, developer IDEs, social communities, and creator tools, then uses **Gloo AI Studio** to understand the human need and **YouVersion Platform API** to retrieve Scripture for a safe, native delivery moment.
+
+![Scripture Everywhere AI cover](media/cover.svg)
+
+## Judge path
+
+1. **Public demo:** https://o-yutaka.github.io/popopo/
+2. **Timed three-minute story:** https://o-yutaka.github.io/popopo/video.html?autoplay=1
+3. **Public Kaggle notebook:** [`notebooks/scripture_everywhere_submission.ipynb`](notebooks/scripture_everywhere_submission.ipynb)
+4. **Media Gallery assets:** [`media/cover.svg`](media/cover.svg) and [`media/architecture.svg`](media/architecture.svg)
+5. **Live API evidence:** [`evidence/`](evidence/) — the JSON proof appears only after a real Gloo + YouVersion run succeeds.
+6. **Kaggle writeup and final checklist:** [`SUBMISSION.md`](SUBMISSION.md)
+
+## Hero story: the runner
+
+A runner reaches a difficult physiological moment: heart rate 170, effort 85%, eighteen minutes into the session. The system does not interrupt mid-stride.
+
+```text
+Wearable context
+  ↓
+Gloo AI Studio
+  need: endurance
+  theme: strength
+  tone: concise
+  safe_to_deliver: true
+  ↓
+Theme allowlist → ISA.40.31
+  ↓
+YouVersion Platform API
+  licensed Scripture passage
+  ↓
+Delivery Policy
+  private haptic cue during recovery window
+```
+
+The other four frontiers are connectors to the same shared intelligence and safety layer—not separate apps.
 
 ## Why this matters
 
-People already live inside games, workouts, IDEs, social feeds, and creator tools. Scripture Everywhere AI does not interrupt those spaces with a generic pop-up. It turns live context into a quiet, native moment of encouragement.
-
-## Demo experiences
-
-- Gaming: repeated failure or team conflict → perseverance and patience
-- Wearables / fitness: peak effort, recovery, or high stress → strength and peace
-- Developer IDE: repeated build failures and long focus sessions → endurance and wisdom
-- Social: harmful or distressed conversation → safe, non-preachy support
-- Creator / streaming: pressure or toxic chat → private grounding for the creator
+People already live inside workouts, games, IDEs, social feeds, and creator tools. Existing experiences usually require them to leave that environment and open another app. Scripture Everywhere AI makes the encounter timely and native while protecting consent, privacy, and human judgment.
 
 ## Architecture
 
 ```text
 Connector Event
   ↓
-Context Normalizer
+Typed Context Normalizer
   ↓
-Gloo AI Studio: need/theme/safety inference
+Gloo AI Studio: need / bounded theme / tone / safety
   ↓
-YouVersion Platform API: Scripture retrieval
+Theme Allowlist → canonical USFM passage ID
   ↓
-Delivery Policy: timing, tone, cooldown, privacy
+YouVersion Platform API: passage retrieval
   ↓
-Native UI card / wearable cue / IDE margin / creator overlay
+Delivery Policy: consent / crisis / timing / privacy / cooldown
+  ↓
+Wearable card / respawn screen / IDE margin / private review / creator overlay
 ```
+
+## Working implementation
+
+- Responsive static product demo
+- Exact 180-second recording experience
+- FastAPI orchestration backend
+- Typed Pydantic contracts
+- Separate Gloo and YouVersion clients
+- Official-style YouVersion passage retrieval by Bible ID and passage ID
+- Deterministic credential-free judging fallback
+- Consent and crisis suppression policy
+- Public-social auto-post prevention
+- Automated tests and GitHub Actions CI
+- Docker backend
+- Manual live-evidence workflow with public redacted proof
+- Complete Kaggle notebook and media assets
+
+## Demo mode versus live mode
+
+The public interface remains reproducible without private credentials. It clearly demonstrates the same contracts and pipeline but must not be represented as proof of sponsor API execution.
+
+Live mode is enabled only when the required Gloo and YouVersion credentials are configured. The workflow in `.github/workflows/live-evidence.yml` then performs a real wearable request, requires `mode=live`, requires `scripture.source=youversion`, removes the full passage text and secrets, and commits a redacted evidence file.
 
 ## Run locally
 
@@ -38,9 +89,12 @@ Native UI card / wearable cue / IDE margin / creator overlay
 python -m http.server 8000
 ```
 
-Open `http://localhost:8000`.
+Open:
 
-For the API service:
+- Product demo: `http://localhost:8000/`
+- Three-minute recording page: `http://localhost:8000/video.html?autoplay=1`
+
+Backend:
 
 ```bash
 cd backend
@@ -51,51 +105,40 @@ cp .env.example .env
 uvicorn app:app --reload
 ```
 
-## API configuration
+Tests:
 
-```env
-GLOO_API_KEY=replace_me
-GLOO_BASE_URL=https://api.gloo.ai
-GLOO_MODEL=replace_with_available_model
-YOUVERSION_API_KEY=replace_me
-YOUVERSION_BASE_URL=https://api.youversion.com
-YOUVERSION_BIBLE_ID=replace_with_bible_id
-```
-
-The repository contains a deterministic demo fallback so judges can experience the product even when API credentials are not configured. Live mode is enabled only when both required API keys are present.
-
-## Repository map
-
-```text
-index.html                 interactive public demo
-app.js                     five-frontier simulation and API client
-styles.css                 responsive UI
-backend/app.py             FastAPI orchestration service
-backend/clients.py         Gloo + YouVersion adapters
-backend/models.py          typed contracts
-backend/requirements.txt   backend dependencies
-notebooks/demo.ipynb       public Kaggle notebook starter
-SUBMISSION.md              writeup and 3-minute video script
+```bash
+cd backend
+pytest -q
 ```
 
 ## Safety and privacy
 
-- No diagnosis or spiritual certainty claims
-- No public intervention for sensitive social content by default
-- Rate limits and cooldowns prevent notification fatigue
-- Raw biometrics and private text are not retained by the demo
-- Gloo safety result can suppress delivery
-- Users can dismiss, pause, or disable every connector
+- Explicit user opt-in is required.
+- Crisis and self-harm signals suppress ordinary automated delivery and route to human support.
+- Sensitive public social content is never auto-posted.
+- The system does not diagnose or claim divine certainty.
+- Cooldowns and user controls prevent notification fatigue.
+- Raw biometrics and private text are not retained by the prototype.
 
-## Hackathon proof
+## Repository map
 
-The backend calls both required APIs in sequence:
-
-1. Gloo AI Studio converts normalized context into a structured need, theme, tone, and safety decision.
-2. YouVersion Platform retrieves Scripture using that theme and configured Bible/language.
-3. A delivery policy selects the correct native presentation.
-
-See [`SUBMISSION.md`](SUBMISSION.md) for the Kaggle writeup draft and video shot list.
+```text
+index.html                              public interactive demo
+video.html                              exact 180-second recording experience
+app.js / styles.css                     five-frontier UI
+backend/app.py                          FastAPI orchestration
+backend/clients.py                      Gloo + YouVersion adapters
+backend/policy.py                       consent, crisis and privacy gates
+backend/tests/                          automated contract tests
+backend/scripts/capture_live_evidence.py redacted real-API proof
+notebooks/scripture_everywhere_submission.ipynb
+media/cover.svg                         Kaggle cover image
+media/architecture.svg                  architecture gallery image
+SUBMISSION.md                           writeup, links and submission gate
+VIDEO_RECORDING.md                      exact narration and recording process
+AUDIT.md                                first-place readiness audit
+```
 
 ## License
 
