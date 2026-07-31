@@ -9,7 +9,7 @@ from policy import decide_delivery
 load_dotenv()
 app = FastAPI(
     title="Scripture Everywhere AI",
-    version="1.0.0",
+    version="1.1.0",
     description="Consent-first context → Gloo discernment → YouVersion passage → native delivery.",
 )
 app.add_middleware(
@@ -47,6 +47,8 @@ def health() -> dict:
     return {
         "ok": True,
         "gloo_configured": gloo.configured,
+        "gloo_auth_mode": gloo.auth_mode,
+        "gloo_api_version": "v2",
         "youversion_configured": youversion.configured,
         "mode": "live" if live else "demo",
         "required_apis": ["Gloo AI Studio", "YouVersion Platform"],
@@ -58,7 +60,11 @@ def health() -> dict:
 async def create_experience(event: ContextEvent) -> ExperienceResponse:
     discernment = await gloo.discern(event)
     policy = decide_delivery(event, discernment, SURFACES[event.source])
-    scripture = await youversion.find_scripture(discernment.theme, event.locale) if policy.allowed else None
+    scripture = (
+        await youversion.find_scripture(discernment.theme, event.locale)
+        if policy.allowed
+        else None
+    )
     mode = "live" if gloo.configured and youversion.configured else "demo"
 
     return ExperienceResponse(
