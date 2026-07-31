@@ -19,7 +19,7 @@ def main() -> None:
         "metrics": {"heart_rate": 170, "effort": 0.85, "minutes": 18},
         "locale": "en",
         "privacy": "private",
-        "opted_in": True,
+        "user_opted_in": True,
     }
     with httpx.Client(timeout=45) as client:
         health = client.get(f"{BASE_URL}/health")
