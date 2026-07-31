@@ -1,0 +1,46 @@
+name: Capture verified live API evidence
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    env:
+      GLOO_API_KEY: ${{ secrets.GLOO_API_KEY }}
+      GLOO_BASE_URL: ${{ secrets.GLOO_BASE_URL }}
+      GLOO_MODEL: ${{ secrets.GLOO_MODEL }}
+      GLOO_CHAT_PATH: ${{ secrets.GLOO_CHAT_PATH }}
+      YVP_APP_KEY: ${{ secrets.YVP_APP_KEY }}
+      YOUVERSION_BASE_URL: ${{ secrets.YOUVERSION_BASE_URL }}
+      YOUVERSION_BIBLE_ID: ${{ secrets.YOUVERSION_BIBLE_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install backend
+        run: pip install -r backend/requirements.txt
+      - name: Start API
+        working-directory: backend
+        run: |
+          uvicorn app:app --host 127.0.0.1 --port 8000 > /tmp/scripture-api.log 2>&1 &
+          echo $! > /tmp/scripture-api.pid
+          for i in {1..30}; do curl -fsS http://127.0.0.1:8000/health && break; sleep 1; done
+      - name: Capture redacted proof
+        run: python backend/scripts/capture_live_evidence.py
+      - name: Commit proof
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add evidence/live-api-evidence.json
+          git commit -m "Add verified live Gloo and YouVersion evidence [skip ci]" || exit 0
+          git push
+      - name: Upload proof artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-api-evidence
+          path: evidence/live-api-evidence.json
