@@ -9,7 +9,7 @@ A working prototype for **Scripture in New Frontiers**. It detects meaningful mo
 ## Judge path
 
 1. **Public demo:** https://o-yutaka.github.io/popopo/
-2. **Timed three-minute story:** https://o-yutaka.github.io/popopo/video.html?autoplay=1
+2. **Timed 2:59 judge story:** https://o-yutaka.github.io/popopo/video.html?autoplay=1
 3. **Public Kaggle notebook:** [`notebooks/scripture_everywhere_submission.ipynb`](notebooks/scripture_everywhere_submission.ipynb)
 4. **Media Gallery assets:** [`media/cover.png`](media/cover.png) and [`media/architecture.png`](media/architecture.png)
 5. **Live API evidence:** [`evidence/`](evidence/) — the JSON proof appears only after a real Gloo + YouVersion run succeeds.
@@ -17,24 +17,22 @@ A working prototype for **Scripture in New Frontiers**. It detects meaningful mo
 
 ## Hero story: the runner
 
-A runner reaches a difficult physiological moment: heart rate 170, effort 85%, eighteen minutes into the session. The system does not interrupt mid-stride.
+The judge video shows the interaction rather than only describing it:
 
 ```text
-Wearable context
+Heart rate 170 + effort 85%
   ↓
-Gloo AI Studio Completions V2
-  need: endurance
-  theme: strength
-  tone: concise
-  safe_to_deliver: true
+SIGNAL DETECTED
   ↓
-Theme allowlist → ISA.40.31
+Local consent / crisis / privacy / cooldown preflight
   ↓
-YouVersion Platform passage API
-  licensed Scripture passage
+WAITING FOR RECOVERY — no interruption mid-stride
   ↓
-Delivery Policy
-  private haptic cue during recovery window
+Quiet haptic cue
+  ↓
+Runner raises wrist
+  ↓
+Scripture card appears with demo/live attribution clearly labeled
 ```
 
 The other four frontiers are connectors to the same shared intelligence and safety layer—not separate apps.
@@ -48,7 +46,7 @@ People already live inside workouts, games, IDEs, social feeds, and creator tool
 ```text
 Connector Event
   ↓
-Typed Context Normalizer
+Local consent / crisis / cooldown preflight
   ↓
 Gloo OAuth2 client credentials → short-lived bearer token
   ↓
@@ -56,9 +54,9 @@ Gloo Completions V2: need / bounded theme / tone / safety
   ↓
 Theme Allowlist → canonical USFM passage ID
   ↓
-YouVersion Platform: X-YVP-App-Key + passage retrieval
+YouVersion Platform: X-YVP-App-Key + passage + Bible attribution
   ↓
-Delivery Policy: consent / crisis / timing / privacy / cooldown
+Delivery Policy: timing / privacy / dismiss / cooldown
   ↓
 Wearable card / respawn screen / IDE margin / private review / creator overlay
 ```
@@ -66,24 +64,26 @@ Wearable card / respawn screen / IDE margin / private review / creator overlay
 ## Working implementation
 
 - Responsive static product demo
-- Exact 180-second recording experience
+- Clean **179-second** judge video with a one-second upload buffer
+- Three-stage runner interaction: detect → wait → reveal
+- Recording mode hides timer, pause button, keyboard hints, and progress controls
+- Final public-demo CTA and repository link
+- Dynamic evidence card that shows live verification only when a real evidence JSON exists
 - FastAPI orchestration backend
 - Typed, strict Pydantic contracts
 - Official Gloo OAuth2 client-credentials exchange with required `api/access` scope
 - Gloo Completions V2 at `/ai/v2/chat/completions`
-- Short-lived bearer-token caching and refresh
-- Official YouVersion passage retrieval by Bible ID and canonical USFM passage ID
+- Official YouVersion passage retrieval and Bible attribution
 - Deterministic credential-free judging fallback
-- Consent and crisis suppression policy
-- Public-social auto-post prevention
-- Automated API, OAuth, media, notebook, word-count, and video-duration tests
+- Consent and crisis suppression before sponsor calls
+- Public-social auto-post prevention and pseudonymous cooldown
+- Automated API, OAuth, media, notebook, word-count, video-duration, CTA, attribution, and clean-record-mode tests
 - GitHub Actions CI, Pages deployment, video rendering, PNG rendering, and live-evidence workflows
-- Docker backend
-- Complete Kaggle notebook and upload-ready PNG media assets
+- Docker backend, complete Kaggle notebook, and upload-ready PNG assets
 
 ## Demo mode versus live mode
 
-The public interface remains reproducible without private credentials. It clearly demonstrates the same contracts and pipeline but must not be represented as proof of sponsor API execution.
+The public interface remains reproducible without private credentials. It demonstrates the contracts and interaction but must not be represented as proof of sponsor API execution.
 
 Live mode requires:
 
@@ -93,7 +93,7 @@ GLOO_CLIENT_SECRET=...
 YVP_APP_KEY=...
 ```
 
-The evidence workflow exchanges the Gloo credentials for a short-lived OAuth2 token, calls Gloo Completions V2, retrieves the passage through YouVersion, requires `mode=live`, requires `gloo_auth_mode=oauth2_client_credentials`, requires `scripture.source=youversion`, removes the full passage text and all secrets, and commits a redacted evidence file.
+The evidence workflow requires both sponsor calls in one request and commits only redacted proof. The video loads that proof when present; otherwise it explicitly labels the live gate as separate.
 
 ## Run locally
 
@@ -104,7 +104,8 @@ python -m http.server 8000
 Open:
 
 - Product demo: `http://localhost:8000/`
-- Three-minute recording page: `http://localhost:8000/video.html?autoplay=1`
+- Interactive judge story: `http://localhost:8000/video.html?autoplay=1`
+- Clean recording mode: `http://localhost:8000/video.html?autoplay=1&record=1`
 
 Backend:
 
@@ -137,7 +138,7 @@ pytest -q
 
 ```text
 index.html                               public interactive demo
-video.html                               exact 180-second recording experience
+video.html                               clean 179-second interaction-first judge story
 app.js / styles.css                      five-frontier UI
 backend/app.py                           FastAPI orchestration
 backend/clients.py                       Gloo OAuth2/V2 + YouVersion adapters
@@ -148,7 +149,7 @@ notebooks/scripture_everywhere_submission.ipynb
 media/cover.png                          Kaggle/YouTube cover image
 media/architecture.png                   architecture gallery image
 SUBMISSION.md                            writeup, links and submission gate
-VIDEO_RECORDING.md                       exact narration and recording process
+VIDEO_RECORDING.md                       narration and recording process
 AUDIT.md                                 first-place readiness audit
 ```
 
