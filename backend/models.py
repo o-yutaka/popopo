@@ -1,14 +1,26 @@
 from typing import Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+
+Source = Literal["gaming", "wearable", "ide", "social", "creator"]
+Privacy = Literal["private", "public"]
 
 
 class ContextEvent(BaseModel):
-    source: Literal["gaming", "wearable", "ide", "social", "creator"]
-    moment_type: str
+    source: Source
+    moment_type: str = Field(min_length=1, max_length=80)
     metrics: dict[str, float | int | str] = Field(default_factory=dict)
-    text: str | None = None
-    locale: str = "en"
-    privacy: Literal["private", "public"] = "private"
+    text: str | None = Field(default=None, max_length=2000)
+    locale: str = Field(default="en", min_length=2, max_length=20)
+    privacy: Privacy = "private"
+    user_opted_in: bool = True
+
+    @field_validator("metrics")
+    @classmethod
+    def limit_metrics(cls, value: dict[str, float | int | str]) -> dict[str, float | int | str]:
+        if len(value) > 30:
+            raise ValueError("metrics supports at most 30 entries")
+        return value
 
 
 class Discernment(BaseModel):
@@ -23,6 +35,7 @@ class Discernment(BaseModel):
 class ScriptureResult(BaseModel):
     reference: str
     text: str
+    passage_id: str | None = None
     bible_id: str | None = None
     source: Literal["youversion", "demo"]
 
@@ -33,4 +46,8 @@ class ExperienceResponse(BaseModel):
     scripture: ScriptureResult | None
     delivery_surface: str
     suppressed: bool
+    suppression_reason: str | None = None
     mode: Literal["live", "demo"]
+    pipeline: list[str] = Field(default_factory=lambda: [
+        "context_normalized", "gloo_discernment", "youversion_passage", "delivery_policy"
+    ])
