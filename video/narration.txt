@@ -1,15 +1,19 @@
 People already live through meaningful and difficult moments inside digital systems. A runner reaches exhaustion. A player fails again. A developer gets trapped in a build loop. But when the moment gets hard, Scripture is usually somewhere else.
 
-Scripture Everywhere AI changes that. It is one shared, context-aware intelligence layer for every digital frontier. It does not create five disconnected Bible apps. It turns each environment into a connector, then reuses the same discernment, Scripture retrieval, safety, and delivery system.
+Scripture Everywhere AI changes that. It is one shared context engine for every digital frontier. Each environment becomes a connector to the same discernment, Scripture retrieval, safety, and delivery system.
 
-Our main story follows one runner. Eighteen minutes into a difficult session, the wearable reports a heart rate of one hundred seventy and effort above eighty-five percent. The system recognizes a possible breakthrough wall, but it does not interrupt the runner mid-stride. It waits for a safe recovery window. Gloo AI Studio interprets the normalized context and returns a structured decision: the human need is endurance, the theme is strength, the tone should be concise, and delivery is safe. That bounded theme resolves to a canonical passage identifier. YouVersion Platform API retrieves the Scripture passage in the configured Bible and language. The delivery policy then chooses a quiet, private haptic cue. When the runner raises their wrist, the verse appears without taking them out of the experience.
+Our main story follows one runner. Eighteen minutes into a difficult session, the wearable reports a heart rate of one hundred seventy and effort above eighty-five percent. The system detects a possible breakthrough wall, but it does not interrupt mid-stride.
 
-Technically, every moment follows four visible stages. First, a connector converts raw signals into one typed context contract. Second, Gloo AI Studio identifies need, bounded theme, tone, and safety eligibility. Third, the theme allowlist resolves to a canonical passage identifier and YouVersion supplies the Scripture text. Fourth, the delivery policy selects consent, timing, privacy, cooldown, and the native surface. The model never invents the Scripture text.
+Timing is the product. A local preflight checks consent, crisis signals, privacy, and cooldown before private context can reach an external API. The delivery policy waits for a safe recovery window. A quiet haptic cue is armed, but the screen remains clear.
 
-Trust is part of the product, not an afterthought. Explicit opt-in is required. Crisis and self-harm signals suppress normal automated delivery and route to human support. Sensitive social moments never auto-post publicly. The system does not diagnose anyone or claim divine certainty. Every connector can be paused, dismissed, or disabled.
+Then the runner slows and raises their wrist. Only now does the verse appear. The runner chooses the moment, and the experience stays native to the workout. The displayed line is a demo excerpt; live mode returns the selected Bible version and required attribution from YouVersion.
 
-The same brain can meet a player at a respawn screen, a developer after a failed build, a moderator through private human review, or a creator beside live chat controls. Only the connector and delivery surface change.
+Technically, every eligible moment follows four visible stages. First, local preflight blocks unsafe or non-consented events before sponsor calls. Second, the backend exchanges Gloo client credentials for a short-lived OAuth token and calls Gloo Completions V2. Gloo returns the human need, a bounded theme, tone, and safety eligibility. Third, the theme allowlist resolves to a canonical USFM passage identifier. YouVersion retrieves the passage and Bible attribution. Fourth, delivery policy selects recovery timing, privacy, dismiss controls, and a pseudonymous cooldown.
 
-This is a working, inspectable prototype built with FastAPI, typed contracts, separate Gloo and YouVersion clients, automated tests, continuous integration, a public notebook, and redacted live-evidence capture.
+Trust is part of the product, not an afterthought. Explicit opt-in is required. Crisis and self-harm signals route to human support. Sensitive social moments never auto-post publicly. The system does not diagnose anyone or claim divine certainty.
 
-Scripture should not wait in another app. The right word should meet people inside the moment itself.
+The same brain can meet a player at a respawn screen, a developer after a failed build, a moderator through private human review, or a creator beside live chat controls. Only the connector and native delivery surface change.
+
+The prototype is inspectable. Strict API responses report which sponsor calls actually executed. Demo mode stays visibly separate from live evidence. The repository includes FastAPI, typed contracts, sixteen passing tests, continuous integration, a public notebook, media assets, and a redacted verification workflow.
+
+Try the experience at o-yutaka dot github dot io slash popopo. Built with Gloo AI Studio and YouVersion Platform. The right word, inside the moment.
