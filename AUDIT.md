@@ -2,7 +2,7 @@
 
 ## Verdict
 
-The repository is now a **judge-ready technical, safety, notebook, video, and media package**. Remaining open gates require sponsor credentials or external account actions and must not be represented as complete until public evidence exists.
+The repository is now a **CI-verified judge-ready technical, safety, notebook, video, and media package**. Remaining open gates require sponsor credentials or external account actions and must not be represented as complete until public evidence exists.
 
 ## Hard gates
 
@@ -30,8 +30,18 @@ The repository is now a **judge-ready technical, safety, notebook, video, and me
 | G20 | Public-social auto-post prohibited | PASS | private moderator route and human review |
 | G21 | Pseudonymous cooldown enforcement | PASS | SHA-256 key ledger, no raw identity retained |
 | G22 | Strict API contract | PASS | unknown fields rejected with 422 |
-| G23 | Submission-asset regression gates | PASS_IN_CODE | tests enforce 180 seconds, notebook JSON, 500 words, media size and files |
-| G24 | CI green on current HEAD | VERIFY | successful GitHub Actions run must be visible |
+| G23 | Submission-asset regression gates | PASS | GitHub Actions validated 180 seconds, notebook JSON, 500-word cap, media size and required files |
+| G24 | CI green | PASS | GitHub Actions CI run #71: 16 tests passed; Python compileall passed |
+
+## Verified CI record
+
+- Audit PR: https://github.com/o-yutaka/popopo/pull/1
+- Result: closed without merge because it contained audit-only trigger files
+- GitHub Actions run: `CI #71`
+- Runtime: Python 3.12 on Ubuntu 24.04
+- Test result: `16 passed in 0.42s`
+- Compilation result: all backend scripts and tests compiled successfully
+- First run exposed an import-path defect; `backend/tests/conftest.py` fixed it on `main`, then the full audit passed
 
 ## Real execution order
 
@@ -60,7 +70,7 @@ Only claim:
 
 Until then, use:
 
-> Working credential-free prototype with official live adapters, strict execution provenance, and a public verification workflow.
+> CI-verified credential-free prototype with official live adapters, strict execution provenance, and a public verification workflow.
 
 ## Local acceptance
 
@@ -97,7 +107,7 @@ pipeline
 
 ## External completion order
 
-1. Verify Pages and current CI in a logged-out browser.
+1. Verify the Pages URL in a logged-out browser.
 2. Follow `SPONSOR_SETUP.md` and add the three secrets.
 3. Run `Capture verified live API evidence`.
 4. Confirm `evidence/live-api-evidence.json` was committed.
