@@ -181,9 +181,18 @@ async def active_scene_bounds(page: Page) -> dict[str, float]:
     return await page.evaluate(
         """() => {
           const active = document.querySelector('.scene.active');
-          const elements = [active, ...active.querySelectorAll('*')]
-            .filter(el => getComputedStyle(el).display !== 'none');
-          const rects = elements.map(el => el.getBoundingClientRect());
+          const rects = [...active.querySelectorAll('*')]
+            .filter(el => {
+              const style = getComputedStyle(el);
+              const rect = el.getBoundingClientRect();
+              return style.display !== 'none' && style.visibility !== 'hidden'
+                && rect.width > 0 && rect.height > 0;
+            })
+            .map(el => el.getBoundingClientRect());
+          if (!rects.length) {
+            const rect = active.getBoundingClientRect();
+            rects.push(rect);
+          }
           return {
             viewportWidth: innerWidth,
             viewportHeight: innerHeight,
