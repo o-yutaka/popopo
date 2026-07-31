@@ -5,9 +5,10 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-URL = os.getenv("VIDEO_URL", "http://127.0.0.1:8000/video.html?autoplay=1")
+URL = os.getenv("VIDEO_URL", "http://127.0.0.1:8000/video.html?autoplay=1&record=1")
 OUT_DIR = Path(os.getenv("VIDEO_OUT_DIR", "build/video-raw"))
 OUT_FILE = Path(os.getenv("VIDEO_WEBM", "build/scripture-everywhere.webm"))
+TIMELINE_SECONDS = 179
 
 
 def main() -> None:
@@ -24,10 +25,13 @@ def main() -> None:
         page = context.new_page()
         page.goto(URL, wait_until="networkidle")
         page.wait_for_function(
-            "[...document.querySelectorAll('.scene')].reduce((n,s)=>n+Number(s.dataset.duration),0) === 180"
+            "[...document.querySelectorAll('.scene')].reduce((n,s)=>n+Number(s.dataset.duration),0) === 179"
         )
+        page.wait_for_function("document.body.classList.contains('record-mode')")
+        if page.locator(".bottom").is_visible() or page.locator(".timer").is_visible():
+            raise RuntimeError("Recording controls are visible in presentation mode")
         video = page.video
-        page.wait_for_timeout(181_000)
+        page.wait_for_timeout((TIMELINE_SECONDS + 1) * 1000)
         page.close()
         if video is None:
             raise RuntimeError("Playwright did not create a video object")
@@ -36,7 +40,7 @@ def main() -> None:
         browser.close()
     if not OUT_FILE.exists() or OUT_FILE.stat().st_size == 0:
         raise RuntimeError("Recorded video file is missing or empty")
-    print(f"Recorded {OUT_FILE} ({OUT_FILE.stat().st_size} bytes)")
+    print(f"Recorded clean {TIMELINE_SECONDS}-second presentation to {OUT_FILE} ({OUT_FILE.stat().st_size} bytes)")
 
 
 if __name__ == "__main__":
