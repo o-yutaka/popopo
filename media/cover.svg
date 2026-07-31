@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Scripture Everywhere AI</title>
+  <desc id="desc">A runner and wearable interface connected to Gloo AI Studio and YouVersion through a contextual intelligence pipeline.</desc>
+  <defs>
+    <radialGradient id="bg" cx="78%" cy="8%" r="95%"><stop offset="0" stop-color="#245b44"/><stop offset="0.48" stop-color="#0d241b"/><stop offset="1" stop-color="#06100d"/></radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3ffd2"/><stop offset="1" stop-color="#d9f871"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="18" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1280" cy="120" r="260" fill="#d9f871" opacity=".08"/>
+  <path d="M0 700 C350 520 680 820 1000 640 S1450 560 1600 650 V900 H0Z" fill="#102b20"/>
+  <g transform="translate(110 100)">
+    <text fill="#d9f871" font-family="Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="6">SCRIPTURE IN NEW FRONTIERS</text>
+    <text y="100" fill="#f6f4e8" font-family="Arial, sans-serif" font-size="106" font-weight="800" letter-spacing="-5">One Brain.</text>
+    <text y="205" fill="#f6f4e8" font-family="Arial, sans-serif" font-size="106" font-weight="800" letter-spacing="-5">Every Digital Moment.</text>
+    <text y="272" fill="#a9b8ae" font-family="Arial, sans-serif" font-size="34">Context-aware Scripture that arrives inside the moment.</text>
+  </g>
+  <g transform="translate(1040 245)">
+    <rect width="360" height="500" rx="84" fill="#050b09" stroke="#47705f" stroke-width="5"/>
+    <rect x="36" y="50" width="288" height="400" rx="48" fill="#0e2119"/>
+    <text x="180" y="114" text-anchor="middle" fill="#9caf9f" font-family="Arial" font-size="20" letter-spacing="3">RUN / LIVE</text>
+    <text x="180" y="236" text-anchor="middle" fill="#f6f4e8" font-family="Arial" font-size="100" font-weight="800">170</text>
+    <text x="180" y="272" text-anchor="middle" fill="#9caf9f" font-family="Arial" font-size="17" letter-spacing="3">HEART RATE</text>
+    <rect x="62" y="304" width="236" height="112" rx="26" fill="url(#card)" filter="url(#glow)"/>
+    <text x="84" y="340" fill="#102017" font-family="Georgia" font-size="20">Those who hope</text>
+    <text x="84" y="368" fill="#102017" font-family="Georgia" font-size="20">in the Lord will renew</text>
+    <text x="84" y="396" fill="#102017" font-family="Georgia" font-size="20">their strength.</text>
+  </g>
+  <g transform="translate(115 520)" font-family="Arial, sans-serif">
+    <g><rect width="190" height="82" rx="20" fill="#142f24" stroke="#365747"/><text x="95" y="34" text-anchor="middle" fill="#d9f871" font-size="18" font-weight="700">CONTEXT</text><text x="95" y="60" text-anchor="middle" fill="#9fb2a7" font-size="15">Heart rate + effort</text></g>
+    <path d="M200 41 H270" stroke="#d9f871" stroke-width="4"/><path d="M260 31 L274 41 L260 51" fill="none" stroke="#d9f871" stroke-width="4"/>
+    <g transform="translate(285)"><rect width="220" height="82" rx="20" fill="#142f24" stroke="#365747"/><text x="110" y="34" text-anchor="middle" fill="#d9f871" font-size="18" font-weight="700">GLOO AI</text><text x="110" y="60" text-anchor="middle" fill="#9fb2a7" font-size="15">Need + tone + safety</text></g>
+    <path d="M515 41 H585" stroke="#d9f871" stroke-width="4"/><path d="M575 31 L589 41 L575 51" fill="none" stroke="#d9f871" stroke-width="4"/>
+    <g transform="translate(600)"><rect width="230" height="82" rx="20" fill="#142f24" stroke="#365747"/><text x="115" y="34" text-anchor="middle" fill="#d9f871" font-size="18" font-weight="700">YOUVERSION</text><text x="115" y="60" text-anchor="middle" fill="#9fb2a7" font-size="15">Licensed Scripture</text></g>
+  </g>
+  <text x="115" y="760" fill="#f6f4e8" font-family="Arial" font-size="30" font-weight="700">Wearable • Gaming • IDE • Social • Creator</text>
+  <text x="115" y="812" fill="#9fb2a7" font-family="Arial" font-size="25">One shared intelligence and safety layer.</text>
+</svg>
