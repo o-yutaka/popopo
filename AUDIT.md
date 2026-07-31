@@ -2,50 +2,48 @@
 
 ## Verdict
 
-The repository is now a **judge-ready technical and media package**. The remaining open gates require external credentials or account-level submission actions; they must not be represented as complete until public evidence exists.
+The repository is now a **judge-ready technical, safety, notebook, video, and media package**. Remaining open gates require sponsor credentials or external account actions and must not be represented as complete until public evidence exists.
 
 ## Hard gates
 
 | Gate | Requirement | Status | Evidence |
 |---|---|---:|---|
-| G1 | Public working product/demo | DEPLOYING | `.github/workflows/pages.yml`; verify `https://o-yutaka.github.io/popopo/` |
-| G2 | Gloo AI Studio live call | OPEN | `evidence/live-api-evidence.json` after secret-backed workflow |
-| G3 | YouVersion live passage call | OPEN | same redacted evidence file with `source=youversion` |
-| G4 | Both APIs in one end-to-end request | OPEN | one `/v1/experience` response with `mode=live` |
-| G5 | Complete public notebook artifact | PASS | `notebooks/scripture_everywhere_submission.ipynb` |
-| G6 | Notebook attached inside Kaggle submission | OPEN | Kaggle notebook URL or attachment screenshot |
-| G7 | Exact video experience and narration package | PASS | `video.html`, narration, captions and render workflow |
-| G8 | Public YouTube video ≤3:00 | OPEN | YouTube URL after uploading rendered MP4 |
-| G9 | Cover and architecture Media Gallery sources | PASS | `media/cover.svg`, `media/architecture.svg` |
-| G10 | Upload-safe PNG media | GENERATING | `.github/workflows/media-assets.yml` commits PNG files |
-| G11 | Media attached inside Kaggle submission | OPEN | Kaggle Media Gallery screenshot |
-| G12 | Kaggle writeup ≤500 words | PASS | `SUBMISSION.md` |
-| G13 | Kaggle writeup finally submitted | OPEN | submitted-state screenshot, not draft |
-| G14 | Public repository and setup reproducible | PASS | README, Dockerfile, tests and workflows |
-| G15 | Consent/crisis/public-social safety | PASS | `backend/policy.py` and automated tests |
-| G16 | YouVersion canonical passage route | PASS | `backend/clients.py` |
-| G17 | Strict API contract rejects unknown fields | PASS | `ConfigDict(extra="forbid")` |
-| G18 | CI green | PENDING | successful Actions run visible on GitHub |
+| G1 | Public working product/demo | VERIFY | `.github/workflows/pages.yml`; open `https://o-yutaka.github.io/popopo/` logged out |
+| G2 | Gloo OAuth2 token exchange | OPEN | live evidence must show `gloo_auth_mode=oauth2_client_credentials` |
+| G3 | Gloo Completions V2 live call | OPEN | evidence must show API v2 and executed `gloo` call |
+| G4 | YouVersion live passage call | OPEN | evidence must show `source=youversion` |
+| G5 | Both APIs in one end-to-end request | OPEN | `sponsor_calls_executed=["gloo","youversion"]` |
+| G6 | Complete public notebook artifact | PASS | `notebooks/scripture_everywhere_submission.ipynb` |
+| G7 | Notebook attached inside Kaggle | OPEN | Kaggle notebook URL or attachment screenshot |
+| G8 | Exact 180-second video package | PASS | timeline assertion, renderer, narration and captions |
+| G9 | Public YouTube video ≤3:00 | OPEN | public/unlisted YouTube URL |
+| G10 | Upload-safe 1600×900 PNG media | PASS | `media/cover.png`, `media/architecture.png` |
+| G11 | Media attached inside Kaggle | OPEN | Kaggle Media Gallery screenshot |
+| G12 | Kaggle writeup ≤500 words | PASS | 401 words in `SUBMISSION.md` |
+| G13 | Kaggle writeup finally submitted | OPEN | non-draft submission state |
+| G14 | Gloo official OAuth scope | PASS | `grant_type=client_credentials`, `scope=api/access` |
+| G15 | Gloo current endpoint | PASS | `/ai/v2/chat/completions` |
+| G16 | YouVersion canonical passage route | PASS | `/v1/bibles/{id}/passages/{usfm}` |
+| G17 | YouVersion attribution | PASS | Bible metadata, copyright and attribution URL returned |
+| G18 | Local consent/crisis preflight before APIs | PASS | `sponsor_calls_executed=[]` regression tests |
+| G19 | No partial live pipeline | PASS | both credentials required before any external call |
+| G20 | Public-social auto-post prohibited | PASS | private moderator route and human review |
+| G21 | Pseudonymous cooldown enforcement | PASS | SHA-256 key ledger, no raw identity retained |
+| G22 | Strict API contract | PASS | unknown fields rejected with 422 |
+| G23 | Submission-asset regression gates | PASS_IN_CODE | tests enforce 180 seconds, notebook JSON, 500 words, media size and files |
+| G24 | CI green on current HEAD | VERIFY | successful GitHub Actions run must be visible |
 
-## Product differentiation
-
-Scripture Everywhere AI is one context-to-Scripture operating layer with five native delivery surfaces:
-
-1. Wearable haptic cue
-2. Game respawn surface
-3. IDE margin card
-4. Private social moderator prompt
-5. Creator-only stream overlay
-
-Shared pipeline:
+## Real execution order
 
 ```text
 context
-→ Gloo discernment
-→ bounded theme
-→ canonical passage ID
-→ YouVersion passage
-→ consent/safety/timing/privacy policy
+→ local consent/crisis/cooldown preflight
+→ Gloo OAuth2 token exchange
+→ Gloo Completions V2 discernment
+→ bounded theme allowlist
+→ canonical USFM passage ID
+→ YouVersion passage + Bible attribution
+→ timing/privacy/cooldown delivery policy
 → native surface
 ```
 
@@ -53,14 +51,16 @@ context
 
 Only claim:
 
-- **“Live Gloo AI Studio inference”** after G2 passes.
-- **“Live YouVersion retrieval”** after G3 passes.
-- **“Live end-to-end sponsor API pipeline”** after G4 passes.
+- **“Live Gloo OAuth2 + Completions V2 inference”** after G2 and G3 pass.
+- **“Live YouVersion passage retrieval with attribution”** after G4 passes.
+- **“Live end-to-end sponsor API pipeline”** after G5 passes.
 - **“Public deployed product”** after G1 is opened in a logged-out browser.
-- **“Kaggle Notebook attached”** only after G6.
-- **“Three-minute YouTube demo”** only after G8.
+- **“Kaggle Notebook attached”** only after G7.
+- **“Three-minute YouTube demo”** only after G9.
 
-Until then, use: **“working credential-free prototype with implemented live adapters and a public verification workflow.”**
+Until then, use:
+
+> Working credential-free prototype with official live adapters, strict execution provenance, and a public verification workflow.
 
 ## Local acceptance
 
@@ -74,7 +74,7 @@ uvicorn app:app --host 0.0.0.0 --port 8000
 ```bash
 curl -s http://localhost:8000/v1/experience \
   -H 'Content-Type: application/json' \
-  -d '{"source":"wearable","moment_type":"effort_peak","metrics":{"heart_rate":170,"effort":0.85,"minutes":18},"privacy":"private","user_opted_in":true}'
+  -d '{"source":"wearable","moment_type":"effort_peak","metrics":{"heart_rate":170,"effort":0.85,"minutes":18},"privacy":"private","user_opted_in":true,"delivery_key":"demo-runner-001"}'
 ```
 
 Required response fields:
@@ -84,19 +84,25 @@ context
 discernment
 scripture
 delivery_surface
+delivery_timing
+cooldown_seconds
+cooldown_remaining_seconds
+cooldown_enforced
 suppressed
 suppression_reason
 mode
+sponsor_calls_executed
 pipeline
 ```
 
 ## External completion order
 
-1. Verify the Pages URL logged out.
-2. Add sponsor API secrets and run `Capture verified live API evidence`.
-3. Confirm the evidence JSON was committed.
-4. Run `Render three-minute submission video` and download the artifact.
-5. Upload MP4, captions and PNG thumbnail to YouTube.
-6. Attach the notebook and both PNGs in Kaggle.
-7. Paste the writeup and all public links.
-8. Submit and capture the final non-draft state.
+1. Verify Pages and current CI in a logged-out browser.
+2. Follow `SPONSOR_SETUP.md` and add the three secrets.
+3. Run `Capture verified live API evidence`.
+4. Confirm `evidence/live-api-evidence.json` was committed.
+5. Run `Render three-minute submission video` and download the artifact.
+6. Upload MP4, captions, and `media/cover.png` to YouTube.
+7. Attach the notebook and both PNGs in Kaggle.
+8. Paste the writeup and every public link.
+9. Submit and capture the final non-draft state.
