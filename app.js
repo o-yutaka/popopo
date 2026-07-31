@@ -1,1 +1,108 @@
-const cases=[{id:'wearable',name:'Wearable',sub:'Right word, right physiological moment',device:'RUN / LIVE',clock:'00:18:00',metric:'170',label:'HEART RATE • BPM',moment:'Breakthrough wall detected',text:'Let us run with perseverance the race marked out for us.',ref:'Hebrews 12:1',native:'Delivered as a quiet haptic cue during effort',trace:[['CONTEXT','heart rate 170 • effort 85% • stress 4.0'],['GLOO AI','need: perseverance • tone: concise • safe: true'],['YOUVERSION','theme search → Hebrews 12:1'],['DELIVERY','wearable card • private • 15 min cooldown']]},{id:'gaming',name:'Gaming',sub:'Meaning woven into play',device:'CO-OP / MATCH',clock:'8TH ATTEMPT',metric:'08',label:'CONSECUTIVE FAILURES',moment:'Frustration pattern detected',text:'Blessed is the one who perseveres under trial.',ref:'James 1:12',native:'Appears at the respawn screen, never mid-combat',trace:[['CONTEXT','8 failures • negative chat • session 41 min'],['GLOO AI','need: perseverance • tone: teammate • safe: true'],['YOUVERSION','theme search → James 1:12'],['DELIVERY','respawn surface • team-safe • cooldown']]},{id:'ide',name:'Developer IDE',sub:'Presence in the margins',device:'EDITOR / BUILD',clock:'03:14:27',metric:'27',label:'FAILED BUILDS',moment:'Long struggle, low progress',text:'If any of you lacks wisdom, you should ask God, who gives generously.',ref:'James 1:5',native:'A dismissible margin card after the build ends',trace:[['CONTEXT','27 build failures • 3h focus • no break'],['GLOO AI','need: wisdom • tone: calm • safe: true'],['YOUVERSION','theme search → James 1:5'],['DELIVERY','IDE margin • private • no interruption']]},{id:'social',name:'Social',sub:'Scripture as conversation',device:'COMMUNITY / LIVE',clock:'PRIVATE',metric:'!',label:'DISTRESS SIGNAL',moment:'Public response suppressed',text:'The Lord is close to the brokenhearted.',ref:'Psalm 34:18',native:'Private support suggestion; never auto-posted publicly',trace:[['CONTEXT','distress language • public channel • confidence .91'],['GLOO AI','need: comfort • sensitive: true • public: false'],['YOUVERSION','theme search → Psalm 34:18'],['DELIVERY','private moderator prompt • human review']]},{id:'creator',name:'Creator',sub:'Grounding during pressure',device:'STREAM / CREATOR',clock:'LIVE 01:42',metric:'94',label:'CHAT PRESSURE INDEX',moment:'Toxicity spike detected',text:'A gentle answer turns away wrath.',ref:'Proverbs 15:1',native:'Creator-only overlay beside chat controls',trace:[['CONTEXT','toxicity spike • creator stress • live audience'],['GLOO AI','need: restraint • tone: grounding • safe: true'],['YOUVERSION','theme search → Proverbs 15:1'],['DELIVERY','private creator overlay • 10 min cooldown']]}];const frontiers=document.querySelector('#frontiers'),scene=document.querySelector('#scene'),trace=document.querySelector('#trace');let active=0,timer;cases.forEach((c,i)=>{const b=document.createElement('button');b.className='frontier';b.innerHTML=`<b>${c.name}</b><small>${c.sub}</small>`;b.onclick=()=>render(i);frontiers.appendChild(b)});function render(i){active=i;const c=cases[i];document.querySelectorAll('.frontier').forEach((x,n)=>x.classList.toggle('active',n===i));document.querySelector('#deviceName').textContent=c.device;document.querySelector('#clock').textContent=c.clock;scene.innerHTML=`<div class="metric">${c.metric}</div><div class="metric-label">${c.label}</div><div class="moment">${c.moment}</div><div class="verse-card"><blockquote>“${c.text}”</blockquote><b>${c.ref}</b></div><div class="native">${c.native}</div>`;trace.innerHTML=c.trace.map(x=>`<div class="trace-item"><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}document.querySelector('#autoBtn').onclick=()=>{clearInterval(timer);render(0);timer=setInterval(()=>render((active+1)%cases.length),2600)};render(0);
+const cases = [
+  {
+    id: 'wearable', name: 'Wearable', sub: 'Right word, right physiological moment',
+    device: 'RUN / LIVE', clock: '00:18:00', metric: '170', label: 'HEART RATE • BPM',
+    moment: 'Breakthrough wall detected', text: 'Those who hope in the Lord will renew their strength.',
+    ref: 'Isaiah 40:31', native: 'Waits for recovery, then delivers a private haptic cue',
+    attribution: 'Credential-free demo excerpt • live mode retrieves text and attribution from YouVersion',
+    trace: [
+      ['LOCAL PREFLIGHT', 'consent true • crisis false • cooldown clear'],
+      ['GLOO V2 CONTRACT', 'need: endurance • theme: strength • tone: concise • safe: true'],
+      ['YOUVERSION ROUTE', 'BSB 3034 • ISA.40.31 • passage + attribution'],
+      ['DELIVERY POLICY', 'recovery window • private • 15 min cooldown']
+    ]
+  },
+  {
+    id: 'gaming', name: 'Gaming', sub: 'Meaning woven into play',
+    device: 'CO-OP / MATCH', clock: '8TH ATTEMPT', metric: '08', label: 'CONSECUTIVE FAILURES',
+    moment: 'Frustration pattern detected', text: 'Blessed is the one who perseveres under trial.',
+    ref: 'James 1:12', native: 'Appears at respawn or round end, never mid-combat',
+    attribution: 'Credential-free demo excerpt • live mode retrieves text and attribution from YouVersion',
+    trace: [
+      ['LOCAL PREFLIGHT', 'consent true • crisis false • cooldown clear'],
+      ['GLOO V2 CONTRACT', 'need: encouragement • theme: perseverance • tone: teammate'],
+      ['YOUVERSION ROUTE', 'BSB 3034 • JAS.1.12 • passage + attribution'],
+      ['DELIVERY POLICY', 'respawn surface • private/team-safe • 15 min cooldown']
+    ]
+  },
+  {
+    id: 'ide', name: 'Developer IDE', sub: 'Presence in the margins',
+    device: 'EDITOR / BUILD', clock: '03:14:27', metric: '27', label: 'FAILED BUILDS',
+    moment: 'Long struggle, low progress', text: 'If any of you lacks wisdom, you should ask God, who gives generously.',
+    ref: 'James 1:5', native: 'A dismissible margin card after the build completes',
+    attribution: 'Credential-free demo excerpt • live mode retrieves text and attribution from YouVersion',
+    trace: [
+      ['LOCAL PREFLIGHT', 'consent true • crisis false • cooldown clear'],
+      ['GLOO V2 CONTRACT', 'need: clarity • theme: wisdom • tone: calm'],
+      ['YOUVERSION ROUTE', 'BSB 3034 • JAS.1.5 • passage + attribution'],
+      ['DELIVERY POLICY', 'after build • private • 30 min cooldown']
+    ]
+  },
+  {
+    id: 'social', name: 'Social', sub: 'Scripture with human judgment',
+    device: 'COMMUNITY / LIVE', clock: 'PRIVATE', metric: '!', label: 'DISTRESS SIGNAL',
+    moment: 'Public response prohibited', text: 'The Lord is close to the brokenhearted.',
+    ref: 'Psalm 34:18', native: 'Private moderator suggestion; never auto-posted publicly',
+    attribution: 'Credential-free demo excerpt • live mode retrieves text and attribution from YouVersion',
+    trace: [
+      ['LOCAL PREFLIGHT', 'consent true • crisis false • public context'],
+      ['GLOO V2 CONTRACT', 'need: support • theme: comfort • public: false'],
+      ['YOUVERSION ROUTE', 'BSB 3034 • PSA.34.18 • passage + attribution'],
+      ['DELIVERY POLICY', 'private moderator prompt • human review • 30 min cooldown']
+    ]
+  },
+  {
+    id: 'creator', name: 'Creator', sub: 'Grounding during pressure',
+    device: 'STREAM / CREATOR', clock: 'LIVE 01:42', metric: '94', label: 'CHAT PRESSURE INDEX',
+    moment: 'Toxicity spike detected', text: 'A gentle answer turns away wrath.',
+    ref: 'Proverbs 15:1', native: 'Creator-only overlay beside chat controls',
+    attribution: 'Credential-free demo excerpt • live mode retrieves text and attribution from YouVersion',
+    trace: [
+      ['LOCAL PREFLIGHT', 'consent true • crisis false • cooldown clear'],
+      ['GLOO V2 CONTRACT', 'need: grounding • theme: restraint • tone: steady'],
+      ['YOUVERSION ROUTE', 'BSB 3034 • PRO.15.1 • passage + attribution'],
+      ['DELIVERY POLICY', 'creator pause • private overlay • 10 min cooldown']
+    ]
+  }
+];
+
+const frontiers = document.querySelector('#frontiers');
+const scene = document.querySelector('#scene');
+const trace = document.querySelector('#trace');
+let active = 0;
+let timer;
+
+cases.forEach((item, index) => {
+  const button = document.createElement('button');
+  button.className = 'frontier';
+  button.innerHTML = `<b>${item.name}</b><small>${item.sub}</small>`;
+  button.onclick = () => render(index);
+  frontiers.appendChild(button);
+});
+
+function render(index) {
+  active = index;
+  const item = cases[index];
+  document.querySelectorAll('.frontier').forEach((node, position) => {
+    node.classList.toggle('active', position === index);
+  });
+  document.querySelector('#deviceName').textContent = item.device;
+  document.querySelector('#clock').textContent = item.clock;
+  scene.innerHTML = `
+    <div class="metric">${item.metric}</div>
+    <div class="metric-label">${item.label}</div>
+    <div class="moment">${item.moment}</div>
+    <div class="verse-card"><blockquote>“${item.text}”</blockquote><b>${item.ref}</b></div>
+    <div class="native">${item.native}</div>
+    <div class="attribution">${item.attribution}</div>`;
+  trace.innerHTML = item.trace.map(([stage, detail]) => `
+    <div class="trace-item"><b>${stage}</b><span>${detail}</span></div>`).join('');
+}
+
+document.querySelector('#autoBtn').onclick = () => {
+  clearInterval(timer);
+  render(0);
+  timer = setInterval(() => render((active + 1) % cases.length), 3200);
+};
+
+render(0);
