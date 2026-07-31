@@ -1,47 +1,77 @@
 # Scripture Everywhere AI
 ## One Brain. Every Digital Moment.
 
-### Kaggle Writeup Draft
+## Submission links
 
-Billions of people spend their most emotionally charged moments inside digital systems: a runner pushing through exhaustion, a player failing for the eighth time, a developer stuck in a three-hour debugging loop, a creator facing a hostile live chat, or a community member expressing distress. Scripture is rarely present in those moments because existing products require users to leave the environment and open a separate Bible app.
+- Public demo: https://o-yutaka.github.io/popopo/
+- Timed three-minute experience: https://o-yutaka.github.io/popopo/video.html?autoplay=1
+- Public source: https://github.com/o-yutaka/popopo
+- Public notebook: https://github.com/o-yutaka/popopo/blob/main/notebooks/scripture_everywhere_submission.ipynb
+- Cover image: https://o-yutaka.github.io/popopo/media/cover.svg
+- Architecture image: https://o-yutaka.github.io/popopo/media/architecture.svg
+- Verified API evidence: https://github.com/o-yutaka/popopo/tree/main/evidence
 
-Scripture Everywhere AI makes Scripture native to the moment. It is a shared context engine that receives signals from five frontiers—gaming, wearables, developer IDEs, social communities, and creator tools—then converts them into one normalized event contract.
+## Kaggle Writeup — under 500 words
 
-The backend uses Gloo AI Studio to infer four things: the human need, a Scripture theme, an appropriate tone, and whether delivery is safe. That structured output is passed to the YouVersion Platform API, which retrieves Scripture in the configured Bible and language. A final delivery policy chooses the correct surface: a respawn screen after combat, a quiet wearable cue during recovery, an IDE margin card after a failed build, a private moderator prompt for sensitive social content, or a creator-only overlay during a stream.
+Billions of people spend emotionally significant moments inside digital systems: a runner pushing through exhaustion, a player failing for the eighth time, a developer trapped in a debugging loop, a creator facing a hostile live chat, or a community member expressing distress. Scripture is rarely present in those moments because existing products require users to leave the experience and open another app.
 
-The key innovation is not verse recommendation alone. It is timing, privacy, and native delivery. The system avoids diagnosis, never claims divine certainty, suppresses unsafe output, applies cooldowns, and defaults sensitive social moments to private human review instead of public auto-posting.
+**Scripture Everywhere AI** makes Scripture native to the moment. It is one shared context engine serving five frontiers: wearables, gaming, developer IDEs, social communities, and creator tools.
 
-Our interactive demo shows the same AI brain adapting across all five environments. The repository includes a working FastAPI orchestration service, typed data contracts, separate Gloo and YouVersion clients, deterministic credential-free fallback for judging, and a responsive public demo. When both API keys are configured, the service switches automatically from demo mode to live mode.
+Our hero experience follows a runner approaching a physiological wall. A wearable connector emits a typed event containing heart rate, effort, timing, privacy, and consent. Gloo AI Studio converts that context into a structured decision: the human need, a bounded Scripture theme, an appropriate tone, and whether delivery is safe. The chosen theme is constrained to an allowlist and resolved to a canonical USFM passage ID. YouVersion Platform API then retrieves the Scripture passage in the configured Bible and language. A final delivery policy waits for a recovery window and uses a quiet private haptic cue rather than interrupting the run.
 
-This architecture is designed for scale: any new frontier only needs a connector that emits the common context schema. The intelligence, safety, Scripture retrieval, and delivery policy remain shared.
+The innovation is not verse recommendation alone. It is **timing, trust, and native delivery**. Explicit opt-in is required. Crisis signals suppress normal automated delivery and route to human support. Sensitive social moments never auto-post publicly. The system does not diagnose or claim divine certainty, and cooldowns prevent notification fatigue.
+
+The same intelligence and safety layer also powers a respawn-screen moment after repeated game failure, an IDE margin card after a build loop, a private moderator prompt for sensitive community content, and a creator-only grounding overlay during a toxicity spike. New environments need only emit the common context contract.
+
+The public repository contains a responsive interactive demo, an exact three-minute recording experience, a FastAPI backend, typed contracts, separate Gloo and YouVersion clients, tests, CI, Docker support, a complete public notebook, and a workflow that records redacted live evidence only after both sponsor APIs succeed.
 
 Scripture Everywhere AI demonstrates a future where people do not have to leave the spaces they love to encounter Scripture. The right word can meet them inside the moment itself.
 
-### Three-Minute Video Script
+## Three-minute video structure
 
-**0:00–0:18 — Problem**
-Show rapid cuts: runner, failed game, red build output, toxic chat, streamer under pressure. Voiceover: “People already live here. But when the moment gets hard, Scripture is somewhere else.”
+| Time | Story beat |
+|---|---|
+| 0:00–0:15 | Difficult moments happen inside digital environments. |
+| 0:15–0:35 | Reveal one shared context-aware brain. |
+| 0:35–1:20 | Runner reaches the wall; safe recovery delivery appears. |
+| 1:20–2:00 | Context → Gloo → YouVersion → Delivery technical proof. |
+| 2:00–2:25 | Consent, crisis, privacy and no-auto-post safety gates. |
+| 2:25–2:45 | Reveal Gaming, IDE, Social and Creator connectors. |
+| 2:45–2:55 | Show backend, tests, notebook and evidence. |
+| 2:55–3:00 | “The right word, inside the moment.” |
 
-**0:18–0:38 — Reveal**
-Open the demo hero. “Scripture Everywhere AI is one context-aware brain for every digital frontier.”
+Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) and record `video.html?autoplay=1`.
 
-**0:38–1:45 — Product Story**
-Use “Play full story.” Show all five scenes. Pause briefly on wearable, gaming, IDE, social privacy suppression, and creator overlay.
+## Final submission gate
 
-**1:45–2:20 — Technical Proof**
-Show the live trace: Context → Gloo AI → YouVersion → Delivery. Cut to `backend/clients.py`, `backend/app.py`, and `/health` response.
+### Completed in GitHub
 
-**2:20–2:42 — Safety**
-Show private social delivery, cooldown, user control, no diagnosis, and suppression gate.
+- [x] Public repository
+- [x] Working public-demo source
+- [x] Automatic GitHub Pages deployment workflow
+- [x] Exact 180-second video experience
+- [x] Kaggle writeup under 500 words
+- [x] Complete public Kaggle notebook
+- [x] 1600×900 cover image
+- [x] Architecture Media Gallery image
+- [x] FastAPI backend using both sponsor adapters
+- [x] Automated tests and CI
+- [x] Consent, crisis and public-social safety gates
+- [x] Redacted live API evidence workflow
 
-**2:42–3:00 — Vision**
-Show connector expansion: Minecraft, Discord, VS Code, Apple Watch, OBS. End: “Scripture should not wait in another app. It should meet people where life is already happening.”
+### Requires account credentials or manual upload
 
-### Submission Checklist
+- [ ] Confirm GitHub Pages URL loads publicly
+- [ ] Add Gloo and YouVersion repository secrets
+- [ ] Run live-evidence workflow and confirm `evidence/live-api-evidence.json` exists
+- [ ] Record the supplied 180-second experience
+- [ ] Upload video to YouTube as public or unlisted
+- [ ] Create or open the Kaggle writeup
+- [ ] Attach the notebook to the Kaggle submission
+- [ ] Upload `media/cover.svg` and `media/architecture.svg` to Media Gallery
+- [ ] Replace submission video placeholder with the YouTube URL
+- [ ] Submit the writeup; do not leave it as draft
 
-- [ ] Public Kaggle Writeup under 500 words
-- [ ] Cover image attached
-- [ ] Public Kaggle Notebook attached
-- [ ] YouTube demo, 3 minutes or less
-- [ ] Public project link: https://github.com/o-yutaka/popopo
-- [ ] Final Writeup submitted, not left as draft
+## Truth rule
+
+Do not state that both sponsor APIs ran live until `evidence/live-api-evidence.json` exists. Demo mode is a reproducible product demonstration; the evidence file is the separate execution proof.
