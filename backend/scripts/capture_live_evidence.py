@@ -31,6 +31,11 @@ def main() -> None:
     data = response.json()
     if health_data.get("mode") != "live" or data.get("mode") != "live":
         raise RuntimeError("Evidence capture requires both APIs to be configured in live mode")
+    if health_data.get("gloo_auth_mode") != "oauth2_client_credentials":
+        raise RuntimeError("Public evidence requires the official Gloo OAuth2 client-credentials flow")
+    if health_data.get("gloo_api_version") != "v2":
+        raise RuntimeError("Public evidence requires Gloo Completions API v2")
+
     scripture = data.get("scripture") or {}
     if scripture.get("source") != "youversion":
         raise RuntimeError("YouVersion live source was not observed")
@@ -38,13 +43,13 @@ def main() -> None:
     text = scripture.pop("text", "")
     evidence = {
         "captured_at": datetime.now(timezone.utc).isoformat(),
-        "claim": "A wearable context event completed the live Gloo -> YouVersion pipeline.",
+        "claim": "A wearable context event completed the live Gloo OAuth2/v2 -> YouVersion passage pipeline.",
         "health": health_data,
         "request": event,
         "response": data,
         "scripture_text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
         "scripture_text_length": len(text),
-        "redaction": "API keys, raw headers, and full licensed passage text are not stored.",
+        "redaction": "Client Secret, App Key, bearer token, raw headers, and full licensed passage text are not stored.",
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
