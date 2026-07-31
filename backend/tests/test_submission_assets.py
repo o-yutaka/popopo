@@ -6,12 +6,33 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_video_timeline_is_exactly_three_minutes():
+def test_video_timeline_is_under_three_minutes_with_buffer():
     html = (ROOT / "video.html").read_text(encoding="utf-8")
     durations = [int(value) for value in re.findall(r'data-duration="(\d+)"', html)]
-    assert len(durations) == 8
-    assert sum(durations) == 180
-    assert "if(total!==180)" in html
+    assert len(durations) == 10
+    assert sum(durations) == 179
+    assert "if(total!==179)" in html
+    assert "02:59" in html
+
+
+def test_video_has_native_interaction_and_clean_record_mode():
+    html = (ROOT / "video.html").read_text(encoding="utf-8")
+    assert "SIGNAL DETECTED" in html
+    assert "WAITING FOR RECOVERY" in html
+    assert "WRIST RAISED" in html
+    assert "record-mode" in html
+    assert ".record-mode .timer" in html
+    assert ".record-mode .bottom" in html
+    assert "o-yutaka.github.io/popopo" in html
+    assert "Demo excerpt" in html
+
+
+def test_video_proof_is_truthful_and_provenance_aware():
+    html = (ROOT / "video.html").read_text(encoding="utf-8")
+    assert "sponsor_calls_executed" in html
+    assert "LIVE SPONSOR PIPELINE VERIFIED" in html
+    assert "evidence/live-api-evidence.json" in html
+    assert "Demo mode remains visibly separate" in html
 
 
 def test_kaggle_notebook_is_valid_v4_json():
@@ -45,6 +66,9 @@ def test_media_gallery_sources_are_1600_by_900():
         assert 'height="900"' in svg
         assert "<title" in svg
         assert "<desc" in svg
+    cover = (ROOT / "media" / "cover.svg").read_text(encoding="utf-8")
+    assert "Every Digital\n" not in cover
+    assert "Demo excerpt" in cover
 
 
 def test_judge_links_and_truth_gate_exist():
