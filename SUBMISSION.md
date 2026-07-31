@@ -9,6 +9,7 @@
 - Public notebook: https://github.com/o-yutaka/popopo/blob/main/notebooks/scripture_everywhere_submission.ipynb
 - Cover image: https://o-yutaka.github.io/popopo/media/cover.png
 - Architecture image: https://o-yutaka.github.io/popopo/media/architecture.png
+- Video render proof: https://github.com/o-yutaka/popopo/blob/main/evidence/video-render-evidence.json
 - Verified API evidence: https://github.com/o-yutaka/popopo/tree/main/evidence
 
 ## Kaggle Writeup — under 500 words
@@ -42,7 +43,7 @@ Scripture Everywhere AI demonstrates a future where the right word meets people 
 | 2:45–2:55 | Show backend, tests, notebook and evidence. |
 | 2:55–3:00 | “The right word, inside the moment.” |
 
-Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) or run the **Render three-minute submission video** workflow.
+The GitHub renderer produced and verified a 1920×1080 H.264/AAC MP4 with an exact duration of `180.000000` seconds. See [`evidence/video-render-evidence.json`](evidence/video-render-evidence.json).
 
 ## Final submission gate
 
@@ -52,7 +53,8 @@ Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) or run the **Render three-minute 
 - [x] Working public-demo source
 - [x] Automatic GitHub Pages deployment workflow
 - [x] Exact 180-second video experience with timeline assertion
-- [x] One-click MP4 rendering workflow, narration and captions
+- [x] Generated 1920×1080 H.264/AAC MP4, exactly 180 seconds
+- [x] Captions, YouTube description, thumbnail, and architecture media package
 - [x] Kaggle writeup under 500 words
 - [x] Complete public Kaggle notebook
 - [x] 1600×900 PNG cover image
@@ -61,7 +63,7 @@ Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) or run the **Render three-minute 
 - [x] Official YouVersion passage and attribution adapter
 - [x] Local consent/crisis preflight before external calls
 - [x] Delivery timing and pseudonymous cooldown enforcement
-- [x] Automated API, OAuth and submission-asset tests
+- [x] GitHub Actions audit: 16 tests passed and compileall passed
 - [x] Redacted live API evidence workflow
 
 ### Requires account credentials or manual upload
@@ -70,8 +72,7 @@ Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) or run the **Render three-minute 
 - [ ] Add `GLOO_CLIENT_ID`, `GLOO_CLIENT_SECRET`, and `YVP_APP_KEY` repository secrets
 - [ ] Confirm the selected YouVersion Bible license is available to the App Key
 - [ ] Run live-evidence workflow and confirm `evidence/live-api-evidence.json` exists
-- [ ] Run video-render workflow and download the MP4 artifact
-- [ ] Upload MP4 and `video/captions.srt` to YouTube as public or unlisted
+- [ ] Upload the generated MP4 and `video/captions.srt` to YouTube as public or unlisted
 - [ ] Attach the notebook to the Kaggle submission
 - [ ] Upload `media/cover.png` and `media/architecture.png` to Media Gallery
 - [ ] Add the YouTube URL to the Kaggle writeup
