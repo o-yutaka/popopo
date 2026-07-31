@@ -1,0 +1,35 @@
+{
+  "verified_at": "2026-07-31T17:15:31Z",
+  "workflow": {
+    "name": "Render three-minute submission video",
+    "run_id": 30650090096,
+    "run_number": 1,
+    "conclusion": "success",
+    "audit_pr": "https://github.com/o-yutaka/popopo/pull/2"
+  },
+  "video": {
+    "file_name": "scripture-everywhere-3min.mp4",
+    "size_bytes": 12382122,
+    "duration_seconds": 180.0,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "width": 1920,
+    "height": 1080,
+    "sha256": "4ad0620e7b00ec76ac879633156c76d287444355ffa71e95a8a18f1915605d29"
+  },
+  "artifact": {
+    "id": 8801122465,
+    "name": "scripture-everywhere-youtube-package",
+    "size_bytes": 12565400,
+    "expires_at": "2026-08-14T17:14:41Z",
+    "sha256": "5fa83719bb39c5c25c23d91d6e615ee6d1081eb233205b4d2f0fc87131df3124",
+    "contents": [
+      "scripture-everywhere-3min.mp4",
+      "captions.srt",
+      "youtube-description.md",
+      "cover.png",
+      "architecture.png"
+    ]
+  },
+  "truth": "The MP4 package is generated and validated. YouTube upload remains an external account action."
+}
