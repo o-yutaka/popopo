@@ -90,8 +90,14 @@ class GlooClient:
             response = await client.post(
                 self.token_url,
                 auth=httpx.BasicAuth(self.client_id, self.client_secret),
-                data={"grant_type": "client_credentials"},
-                headers={"Accept": "application/json"},
+                data={
+                    "grant_type": "client_credentials",
+                    "scope": "api/access",
+                },
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
             )
             response.raise_for_status()
             payload = response.json()
