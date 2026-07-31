@@ -1,35 +1,58 @@
 {
-  "verified_at": "2026-07-31T17:15:31Z",
+  "verified_at": "2026-07-31T19:21:00Z",
   "workflow": {
     "name": "Render three-minute submission video",
-    "run_id": 30650090096,
-    "run_number": 1,
+    "run_id": 30658367441,
+    "run_number": 5,
     "conclusion": "success",
-    "audit_pr": "https://github.com/o-yutaka/popopo/pull/2"
+    "audit_pr": "https://github.com/o-yutaka/popopo/pull/3",
+    "source_head": "3554c745abc0f269f50feb4508e84d568845492e"
+  },
+  "ci": {
+    "run_id": 30658367828,
+    "run_number": 105,
+    "conclusion": "success",
+    "tests_passed": 18,
+    "compileall": "success"
   },
   "video": {
     "file_name": "scripture-everywhere-3min.mp4",
-    "size_bytes": 12382122,
-    "duration_seconds": 180.0,
+    "size_bytes": 13677374,
+    "duration_seconds": 179.0,
     "video_codec": "h264",
     "audio_codec": "aac",
     "width": 1920,
     "height": 1080,
-    "sha256": "4ad0620e7b00ec76ac879633156c76d287444355ffa71e95a8a18f1915605d29"
+    "frame_rate": 25,
+    "mean_volume_db": -20.5,
+    "max_volume_db": -1.4,
+    "sha256": "a86696e85956d89cd7b859c2ed208d83e8b112613f7bfc5574935976bfedf13c"
   },
   "artifact": {
-    "id": 8801122465,
-    "name": "scripture-everywhere-youtube-package",
-    "size_bytes": 12565400,
-    "expires_at": "2026-08-14T17:14:41Z",
-    "sha256": "5fa83719bb39c5c25c23d91d6e615ee6d1081eb233205b4d2f0fc87131df3124",
+    "id": 8804262751,
+    "name": "scripture-everywhere-youtube-package-v2",
+    "size_bytes": 13828757,
+    "expires_at": "2026-08-14T19:19:44Z",
+    "sha256": "7becbc1fec8fcb3de37219ef65b1dae9aa5bffae4b682f3af25ea4c15b87cbf7",
     "contents": [
       "scripture-everywhere-3min.mp4",
+      "scripture-everywhere-3min.sha256",
       "captions.srt",
       "youtube-description.md",
       "cover.png",
       "architecture.png"
     ]
   },
-  "truth": "The MP4 package is generated and validated. YouTube upload remains an external account action."
+  "visual_audit": {
+    "runner_detect_wait_reveal_sequence": "pass",
+    "recording_controls_hidden": "pass",
+    "final_public_demo_cta_visible": "pass",
+    "live_api_claim_truthful": "pass",
+    "test_count_current": "pass",
+    "cover_title_clipping": "none",
+    "cover_verse_clipping": "none",
+    "black_frames": "none",
+    "captions_end_seconds": 179.0
+  },
+  "truth": "The final 179-second MP4 and upload package are generated, CI-verified, and visually inspected. YouTube and Kaggle uploads remain external account actions."
 }
