@@ -2,46 +2,82 @@
 
 ## Verdict
 
-The repository is now a **CI-verified judge-ready technical, safety, notebook, video, and media package**. Remaining open gates require sponsor credentials or external account actions and must not be represented as complete until public evidence exists.
+The repository is a **CI-verified and visually inspected judge-ready technical, safety, notebook, video, and media package**. Remaining open gates require sponsor credentials or external account actions and must not be represented as complete until their public evidence exists.
 
 ## Hard gates
 
 | Gate | Requirement | Status | Evidence |
 |---|---|---:|---|
-| G1 | Public working product/demo | VERIFY | `.github/workflows/pages.yml`; open `https://o-yutaka.github.io/popopo/` logged out |
-| G2 | Gloo OAuth2 token exchange | OPEN | live evidence must show `gloo_auth_mode=oauth2_client_credentials` |
-| G3 | Gloo Completions V2 live call | OPEN | evidence must show API v2 and executed `gloo` call |
-| G4 | YouVersion live passage call | OPEN | evidence must show `source=youversion` |
+| G1 | Public working product/demo | VERIFY | Open `https://o-yutaka.github.io/popopo/` logged out |
+| G2 | Gloo OAuth2 token exchange | OPEN | Live evidence must show `gloo_auth_mode=oauth2_client_credentials` |
+| G3 | Gloo Completions V2 live call | OPEN | Evidence must show executed `gloo` call |
+| G4 | YouVersion live passage call | OPEN | Evidence must show `source=youversion` |
 | G5 | Both APIs in one end-to-end request | OPEN | `sponsor_calls_executed=["gloo","youversion"]` |
 | G6 | Complete public notebook artifact | PASS | `notebooks/scripture_everywhere_submission.ipynb` |
-| G7 | Notebook attached inside Kaggle | OPEN | Kaggle notebook URL or attachment screenshot |
-| G8 | Exact 180-second video package | PASS | timeline assertion, renderer, narration and captions |
-| G9 | Public YouTube video ≤3:00 | OPEN | public/unlisted YouTube URL |
-| G10 | Upload-safe 1600×900 PNG media | PASS | `media/cover.png`, `media/architecture.png` |
-| G11 | Media attached inside Kaggle | OPEN | Kaggle Media Gallery screenshot |
-| G12 | Kaggle writeup ≤500 words | PASS | 401 words in `SUBMISSION.md` |
-| G13 | Kaggle writeup finally submitted | OPEN | non-draft submission state |
-| G14 | Gloo official OAuth scope | PASS | `grant_type=client_credentials`, `scope=api/access` |
-| G15 | Gloo current endpoint | PASS | `/ai/v2/chat/completions` |
-| G16 | YouVersion canonical passage route | PASS | `/v1/bibles/{id}/passages/{usfm}` |
-| G17 | YouVersion attribution | PASS | Bible metadata, copyright and attribution URL returned |
-| G18 | Local consent/crisis preflight before APIs | PASS | `sponsor_calls_executed=[]` regression tests |
-| G19 | No partial live pipeline | PASS | both credentials required before any external call |
-| G20 | Public-social auto-post prohibited | PASS | private moderator route and human review |
-| G21 | Pseudonymous cooldown enforcement | PASS | SHA-256 key ledger, no raw identity retained |
-| G22 | Strict API contract | PASS | unknown fields rejected with 422 |
-| G23 | Submission-asset regression gates | PASS | GitHub Actions validated 180 seconds, notebook JSON, 500-word cap, media size and required files |
-| G24 | CI green | PASS | GitHub Actions CI run #71: 16 tests passed; Python compileall passed |
+| G7 | Notebook attached inside Kaggle | OPEN | Kaggle attachment required |
+| G8 | Clean video package under three minutes | PASS | 179.000s, H.264/AAC, 1920×1080 |
+| G9 | Runner interaction visibly demonstrated | PASS | detect → wait → wrist raise → reveal |
+| G10 | Recording controls absent | PASS | Renderer assertion and visual inspection |
+| G11 | Public CTA visible | PASS | Final frame shows Pages and repository URLs |
+| G12 | Live/demo claims visually separated | PASS | “verified only when” condition plus dynamic evidence gate |
+| G13 | Public YouTube video | OPEN | Public/unlisted YouTube URL required |
+| G14 | Upload-safe 1600×900 PNG media | PASS | `media/cover.png`, `media/architecture.png` |
+| G15 | Cover title and verse not clipped | PASS | Final PNG visual inspection |
+| G16 | Media attached inside Kaggle | OPEN | Kaggle Media Gallery upload required |
+| G17 | Kaggle writeup ≤500 words | PASS | CI word-count gate |
+| G18 | Kaggle writeup finally submitted | OPEN | Non-draft submission state required |
+| G19 | Gloo official OAuth scope | PASS | `grant_type=client_credentials`, `scope=api/access` |
+| G20 | Gloo current endpoint | PASS | `/ai/v2/chat/completions` |
+| G21 | YouVersion canonical passage route | PASS | `/v1/bibles/{id}/passages/{usfm}` |
+| G22 | YouVersion attribution | PASS | Bible metadata, copyright and attribution URL returned |
+| G23 | Local consent/crisis preflight before APIs | PASS | Blocked events execute zero sponsor calls |
+| G24 | No partial live pipeline | PASS | Both credentials required before external calls |
+| G25 | Public-social auto-post prohibited | PASS | Private moderator route and human review |
+| G26 | Pseudonymous cooldown enforcement | PASS | SHA-256 key ledger; no raw identity retained |
+| G27 | Strict API contract | PASS | Unknown fields rejected with 422 |
+| G28 | Final CI green | PASS | CI #105; 18 tests and compileall passed |
+| G29 | Final render green | PASS | Render #5; all ten workflow stages passed |
 
-## Verified CI record
+## Final verified records
 
-- Audit PR: https://github.com/o-yutaka/popopo/pull/1
-- Result: closed without merge because it contained audit-only trigger files
-- GitHub Actions run: `CI #71`
-- Runtime: Python 3.12 on Ubuntu 24.04
-- Test result: `16 passed in 0.42s`
-- Compilation result: all backend scripts and tests compiled successfully
-- First run exposed an import-path defect; `backend/tests/conftest.py` fixed it on `main`, then the full audit passed
+### CI
+
+- Run ID: `30658367828`
+- Run number: `105`
+- Result: `success`
+- Tests: `18 passed`
+- Python compilation: `success`
+
+### Video
+
+- Run ID: `30658367441`
+- Run number: `5`
+- Artifact ID: `8804262751`
+- Duration: `179.000000 seconds`
+- Resolution: `1920×1080`
+- Video: `H.264`, 25 fps
+- Audio: `AAC`, mean `-20.5 dB`, maximum `-1.4 dB`
+- MP4 SHA-256: `a86696e85956d89cd7b859c2ed208d83e8b112613f7bfc5574935976bfedf13c`
+- Artifact SHA-256: `7becbc1fec8fcb3de37219ef65b1dae9aa5bffae4b682f3af25ea4c15b87cbf7`
+- Detailed evidence: `evidence/video-render-evidence.json`
+
+### Visual inspection
+
+```text
+BLACK_FRAMES                 NONE
+RECORDING_CONTROLS           HIDDEN
+RUNNER_DETECT                PASS
+RUNNER_WAIT                  PASS
+RUNNER_WRIST_RAISE           PASS
+SCRIPTURE_REVEAL             PASS
+DEMO_EXCERPT_LABEL           PASS
+LIVE_EVIDENCE_WORDING        PASS
+TEST_COUNT_DISPLAY           PASS
+FINAL_CTA                    PASS
+COVER_TITLE_CLIPPING         NONE
+COVER_VERSE_CLIPPING         NONE
+CAPTIONS_END                 02:59
+```
 
 ## Real execution order
 
@@ -64,55 +100,20 @@ Only claim:
 - **“Live Gloo OAuth2 + Completions V2 inference”** after G2 and G3 pass.
 - **“Live YouVersion passage retrieval with attribution”** after G4 passes.
 - **“Live end-to-end sponsor API pipeline”** after G5 passes.
-- **“Public deployed product”** after G1 is opened in a logged-out browser.
+- **“Public deployed product”** after G1 is opened logged out.
 - **“Kaggle Notebook attached”** only after G7.
-- **“Three-minute YouTube demo”** only after G9.
+- **“YouTube demo published”** only after G13.
 
 Until then, use:
 
-> CI-verified credential-free prototype with official live adapters, strict execution provenance, and a public verification workflow.
-
-## Local acceptance
-
-```bash
-cd backend
-pip install -r requirements.txt
-pytest -q
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-
-```bash
-curl -s http://localhost:8000/v1/experience \
-  -H 'Content-Type: application/json' \
-  -d '{"source":"wearable","moment_type":"effort_peak","metrics":{"heart_rate":170,"effort":0.85,"minutes":18},"privacy":"private","user_opted_in":true,"delivery_key":"demo-runner-001"}'
-```
-
-Required response fields:
-
-```text
-context
-discernment
-scripture
-delivery_surface
-delivery_timing
-cooldown_seconds
-cooldown_remaining_seconds
-cooldown_enforced
-suppressed
-suppression_reason
-mode
-sponsor_calls_executed
-pipeline
-```
+> CI-verified, visually inspected credential-free prototype with official live adapters, strict execution provenance, and a public verification workflow.
 
 ## External completion order
 
-1. Verify the Pages URL in a logged-out browser.
-2. Follow `SPONSOR_SETUP.md` and add the three secrets.
-3. Run `Capture verified live API evidence`.
-4. Confirm `evidence/live-api-evidence.json` was committed.
-5. Run `Render three-minute submission video` and download the artifact.
-6. Upload MP4, captions, and `media/cover.png` to YouTube.
-7. Attach the notebook and both PNGs in Kaggle.
-8. Paste the writeup and every public link.
-9. Submit and capture the final non-draft state.
+1. Verify the Pages URL logged out.
+2. Add `GLOO_CLIENT_ID`, `GLOO_CLIENT_SECRET`, and `YVP_APP_KEY`.
+3. Run `Capture verified live API evidence` and confirm the JSON commit.
+4. Upload the final MP4, captions, and thumbnail to YouTube.
+5. Attach the notebook and both PNGs in Kaggle.
+6. Paste the writeup and all public links.
+7. Submit and capture the final non-draft state.
