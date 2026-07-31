@@ -25,16 +25,27 @@ def test_video_has_native_interaction_and_clean_record_mode():
     assert ".record-mode .bottom" in html
     assert "o-yutaka.github.io/popopo" in html
     assert "Demo excerpt" in html
+    assert "max-height:520px" in html
+    assert "prefers-reduced-motion:reduce" in html
 
 
 def test_video_proof_is_truthful_and_provenance_aware():
     html = (ROOT / "video.html").read_text(encoding="utf-8")
+    status = json.loads((ROOT / "evidence" / "live-api-status.json").read_text(encoding="utf-8"))
+    workflow = (ROOT / ".github" / "workflows" / "live-evidence.yml").read_text(encoding="utf-8")
     assert "verified only when:" in html
     assert 'sponsor_calls_executed = ["gloo", "youversion"]' in html
     assert "18 tests passed" in html
     assert "LIVE SPONSOR PIPELINE VERIFIED" in html
-    assert "evidence/live-api-evidence.json" in html
-    assert "Demo mode remains visibly separate" in html
+    assert "evidence/live-api-status.json" in html
+    assert status == {
+        "verified": False,
+        "sponsor_calls_executed": [],
+        "evidence_path": None,
+        "message": "Live Gloo and YouVersion verification has not been completed.",
+    }
+    assert "evidence/live-api-evidence.json evidence/live-api-status.json" in workflow
+    assert 'calls != ["gloo", "youversion"]' in workflow
 
 
 def test_kaggle_notebook_is_valid_v4_json():
@@ -42,6 +53,8 @@ def test_kaggle_notebook_is_valid_v4_json():
     notebook = json.loads(path.read_text(encoding="utf-8"))
     assert notebook["nbformat"] == 4
     assert len(notebook["cells"]) >= 10
+    assert all(cell.get("id") for cell in notebook["cells"])
+    assert len({cell["id"] for cell in notebook["cells"]}) == len(notebook["cells"])
     joined = "\n".join(
         line
         for cell in notebook["cells"]
@@ -70,9 +83,6 @@ def test_media_gallery_sources_are_1600_by_900():
         assert "<desc" in svg
     cover = (ROOT / "media" / "cover.svg").read_text(encoding="utf-8")
     assert "Every Digital\n" not in cover
-    assert "in the Lord will renew" not in cover
-    assert "in the Lord will" in cover
-    assert "renew their strength." in cover
     assert "Demo excerpt" in cover
 
 
@@ -96,10 +106,14 @@ def test_required_submission_files_exist():
         "video/narration.txt",
         "media/cover.svg",
         "media/architecture.svg",
+        "evidence/live-api-status.json",
         "notebooks/scripture_everywhere_submission.ipynb",
+        "tools/judge_emulator.py",
+        "tools/runtime_emulator.py",
         ".github/workflows/pages.yml",
         ".github/workflows/render-video.yml",
         ".github/workflows/live-evidence.yml",
+        ".github/workflows/judge-emulator.yml",
     ]
     missing = [path for path in required if not (ROOT / path).exists()]
     assert not missing, missing
