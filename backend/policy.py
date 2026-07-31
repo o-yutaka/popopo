@@ -31,6 +31,7 @@ class PolicyDecision:
     surface: str
     timing: str
     cooldown_seconds: int
+    cooldown_remaining_seconds: int = 0
     reason: str | None = None
 
 
@@ -45,29 +46,31 @@ def preflight_delivery(
     cooldown_remaining: int = 0,
 ) -> PolicyDecision | None:
     """Block locally before private text or biometrics reach either sponsor API."""
+    cooldown = COOLDOWN_SECONDS[event.source]
     if not event.user_opted_in:
         return PolicyDecision(
-            False,
-            surface,
-            "not_scheduled",
-            COOLDOWN_SECONDS[event.source],
-            "user_not_opted_in",
+            allowed=False,
+            surface=surface,
+            timing="not_scheduled",
+            cooldown_seconds=cooldown,
+            reason="user_not_opted_in",
         )
     if contains_crisis_signal(event.text):
         return PolicyDecision(
-            False,
-            "human_support_route",
-            "immediate_human_support",
-            0,
-            "crisis_signal_requires_human_support",
+            allowed=False,
+            surface="human_support_route",
+            timing="immediate_human_support",
+            cooldown_seconds=0,
+            reason="crisis_signal_requires_human_support",
         )
     if cooldown_remaining > 0:
         return PolicyDecision(
-            False,
-            surface,
-            "deferred_until_cooldown_expires",
-            cooldown_remaining,
-            "cooldown_active",
+            allowed=False,
+            surface=surface,
+            timing="deferred_until_cooldown_expires",
+            cooldown_seconds=cooldown,
+            cooldown_remaining_seconds=cooldown_remaining,
+            reason="cooldown_active",
         )
     return None
 
@@ -82,26 +85,31 @@ def decide_delivery(
 
     if not discernment.safe_to_deliver:
         return PolicyDecision(
-            False,
-            surface,
-            "suppressed_by_safety",
-            cooldown,
-            "gloo_safety_suppression",
+            allowed=False,
+            surface=surface,
+            timing="suppressed_by_safety",
+            cooldown_seconds=cooldown,
+            reason="gloo_safety_suppression",
         )
     if event.source == "social" and event.privacy == "public":
         return PolicyDecision(
-            True,
-            "private_moderator_prompt",
-            "after_human_review",
-            cooldown,
-            "public_autopost_prohibited",
+            allowed=True,
+            surface="private_moderator_prompt",
+            timing="after_human_review",
+            cooldown_seconds=cooldown,
+            reason="public_autopost_prohibited",
         )
     if event.privacy == "public" and not discernment.public_delivery_allowed:
         return PolicyDecision(
-            True,
-            "private_user_prompt",
-            timing,
-            cooldown,
-            "public_delivery_not_authorized",
+            allowed=True,
+            surface="private_user_prompt",
+            timing=timing,
+            cooldown_seconds=cooldown,
+            reason="public_delivery_not_authorized",
         )
-    return PolicyDecision(True, surface, timing, cooldown)
+    return PolicyDecision(
+        allowed=True,
+        surface=surface,
+        timing=timing,
+        cooldown_seconds=cooldown,
+    )
