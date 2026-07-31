@@ -1,63 +1,67 @@
 1
-00:00:00,000 --> 00:00:07,000
+00:00:00,000 --> 00:00:06,000
 People live through meaningful and difficult moments inside digital systems.
 
 2
-00:00:07,000 --> 00:00:15,000
+00:00:06,000 --> 00:00:12,000
 But when the moment gets hard, Scripture is usually somewhere else.
 
 3
-00:00:15,000 --> 00:00:25,000
-Scripture Everywhere AI is one shared context-aware brain.
+00:00:12,000 --> 00:00:20,000
+Scripture Everywhere AI is one shared context engine.
 
 4
-00:00:25,000 --> 00:00:35,000
-Each environment is a connector to the same intelligence, safety, and delivery system.
+00:00:20,000 --> 00:00:26,000
+Each environment connects to the same intelligence, safety, and delivery system.
 
 5
-00:00:35,000 --> 00:00:50,000
-Eighteen minutes into a difficult run, heart rate reaches 170 and effort exceeds 85 percent.
+00:00:26,000 --> 00:00:40,000
+Heart rate reaches 170 and effort exceeds 85 percent. The system detects the wall without interrupting.
 
 6
-00:00:50,000 --> 00:01:05,000
-The system waits for a safe recovery window instead of interrupting mid-stride.
+00:00:40,000 --> 00:00:55,000
+Local consent, crisis, privacy, and cooldown checks wait for a safe recovery window.
 
 7
-00:01:05,000 --> 00:01:20,000
-A quiet private cue reveals Scripture without taking the runner out of the experience.
+00:00:55,000 --> 00:01:10,000
+A quiet vibration arrives. The runner raises their wrist, and only then does Scripture appear.
 
 8
-00:01:20,000 --> 00:01:35,000
-A connector first normalizes raw signals into one typed context contract.
+00:01:10,000 --> 00:01:20,000
+Blocked events never reach sponsor APIs.
 
 9
-00:01:35,000 --> 00:01:50,000
-Gloo AI Studio returns need, bounded theme, tone, and safety eligibility.
+00:01:20,000 --> 00:01:34,000
+Gloo OAuth2 and Completions V2 return need, bounded theme, tone, and safety.
 
 10
-00:01:50,000 --> 00:02:00,000
-YouVersion retrieves the canonical passage, then delivery policy selects timing and privacy.
+00:01:34,000 --> 00:01:46,000
+The theme resolves to a canonical USFM passage identifier.
 
 11
-00:02:00,000 --> 00:02:12,000
-Explicit opt-in is required, and crisis signals route to human support.
+00:01:46,000 --> 00:01:58,000
+YouVersion returns the passage and Bible attribution; delivery policy selects timing and privacy.
 
 12
-00:02:12,000 --> 00:02:25,000
-Sensitive social moments never auto-post. The system does not diagnose or claim divine certainty.
+00:01:58,000 --> 00:02:10,000
+Explicit opt-in is required, and crisis signals route to human support.
 
 13
-00:02:25,000 --> 00:02:35,000
-The same brain can meet a player at respawn or a developer after a failed build.
+00:02:10,000 --> 00:02:22,000
+Sensitive social moments never auto-post. The system does not diagnose or claim divine certainty.
 
 14
-00:02:35,000 --> 00:02:45,000
-It can support private human review or ground a creator during live pressure.
+00:02:22,000 --> 00:02:34,000
+The same brain supports wearables, gaming, IDEs, social communities, and creators.
 
 15
-00:02:45,000 --> 00:02:55,000
-The prototype includes FastAPI, typed contracts, tests, CI, a public notebook, and live evidence capture.
+00:02:34,000 --> 00:02:46,000
+Only the connector and native delivery surface change.
 
 16
-00:02:55,000 --> 00:03:00,000
-The right word, inside the moment.
+00:02:46,000 --> 00:02:54,000
+Strict responses report which sponsor calls actually executed. Demo and live evidence stay separate.
+
+17
+00:02:54,000 --> 00:02:59,000
+Try o-yutaka.github.io/popopo. The right word, inside the moment.
