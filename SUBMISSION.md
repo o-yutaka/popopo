@@ -7,8 +7,8 @@
 - Timed three-minute experience: https://o-yutaka.github.io/popopo/video.html?autoplay=1
 - Public source: https://github.com/o-yutaka/popopo
 - Public notebook: https://github.com/o-yutaka/popopo/blob/main/notebooks/scripture_everywhere_submission.ipynb
-- Cover image: https://o-yutaka.github.io/popopo/media/cover.svg
-- Architecture image: https://o-yutaka.github.io/popopo/media/architecture.svg
+- Cover image: https://o-yutaka.github.io/popopo/media/cover.png
+- Architecture image: https://o-yutaka.github.io/popopo/media/architecture.png
 - Verified API evidence: https://github.com/o-yutaka/popopo/tree/main/evidence
 
 ## Kaggle Writeup — under 500 words
@@ -17,15 +17,17 @@ Billions of people spend emotionally significant moments inside digital systems:
 
 **Scripture Everywhere AI** makes Scripture native to the moment. It is one shared context engine serving five frontiers: wearables, gaming, developer IDEs, social communities, and creator tools.
 
-Our hero experience follows a runner approaching a physiological wall. A wearable connector emits a typed event containing heart rate, effort, timing, privacy, and consent. Gloo AI Studio converts that context into a structured decision: the human need, a bounded Scripture theme, an appropriate tone, and whether delivery is safe. The chosen theme is constrained to an allowlist and resolved to a canonical USFM passage ID. YouVersion Platform API then retrieves the Scripture passage in the configured Bible and language. A final delivery policy waits for a recovery window and uses a quiet private haptic cue rather than interrupting the run.
+Our hero experience follows a runner approaching a physiological wall. A wearable connector emits a strict typed event containing heart rate, effort, privacy, consent, and an optional pseudonymous cooldown key. A local preflight gate blocks non-consented or crisis events before any sponsor API receives private context. For an eligible event, the backend exchanges Gloo AI Studio Client ID and Secret credentials for a short-lived OAuth2 token, then calls Gloo Completions V2. Gloo returns the human need, a bounded Scripture theme, an appropriate tone, and whether delivery is safe.
 
-The innovation is not verse recommendation alone. It is **timing, trust, and native delivery**. Explicit opt-in is required. Crisis signals suppress normal automated delivery and route to human support. Sensitive social moments never auto-post publicly. The system does not diagnose or claim divine certainty, and cooldowns prevent notification fatigue.
+The chosen theme is constrained to an allowlist and resolved to a canonical USFM passage ID. YouVersion Platform API retrieves the passage plus Bible-version attribution. A final delivery policy waits for a recovery window, uses a quiet private haptic cue, and enforces a fifteen-minute cooldown without retaining raw biometrics, message text, or a direct identity.
+
+The innovation is not verse recommendation alone. It is **timing, trust, provenance, and native delivery**. Sensitive social moments never auto-post publicly. The system does not diagnose or claim divine certainty. Every API response reports which sponsor calls actually executed, so demo mode cannot be mistaken for live evidence.
 
 The same intelligence and safety layer also powers a respawn-screen moment after repeated game failure, an IDE margin card after a build loop, a private moderator prompt for sensitive community content, and a creator-only grounding overlay during a toxicity spike. New environments need only emit the common context contract.
 
-The public repository contains a responsive interactive demo, an exact three-minute recording experience, a FastAPI backend, typed contracts, separate Gloo and YouVersion clients, tests, CI, Docker support, a complete public notebook, and a workflow that records redacted live evidence only after both sponsor APIs succeed.
+The public repository contains an interactive demo, an exact 180-second recording experience, a FastAPI backend, strict contracts, official Gloo OAuth2 and Completions V2 integration, canonical YouVersion passage retrieval, attribution, cooldown enforcement, automated tests, CI, Docker support, a complete public notebook, upload-ready media, and a workflow that commits redacted live evidence only after both sponsor APIs succeed.
 
-Scripture Everywhere AI demonstrates a future where people do not have to leave the spaces they love to encounter Scripture. The right word can meet them inside the moment itself.
+Scripture Everywhere AI demonstrates a future where the right word meets people inside the moment itself.
 
 ## Three-minute video structure
 
@@ -40,7 +42,7 @@ Scripture Everywhere AI demonstrates a future where people do not have to leave 
 | 2:45–2:55 | Show backend, tests, notebook and evidence. |
 | 2:55–3:00 | “The right word, inside the moment.” |
 
-Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) and record `video.html?autoplay=1`.
+Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) or run the **Render three-minute submission video** workflow.
 
 ## Final submission gate
 
@@ -49,29 +51,32 @@ Use [`VIDEO_RECORDING.md`](VIDEO_RECORDING.md) and record `video.html?autoplay=1
 - [x] Public repository
 - [x] Working public-demo source
 - [x] Automatic GitHub Pages deployment workflow
-- [x] Exact 180-second video experience
+- [x] Exact 180-second video experience with timeline assertion
+- [x] One-click MP4 rendering workflow, narration and captions
 - [x] Kaggle writeup under 500 words
 - [x] Complete public Kaggle notebook
-- [x] 1600×900 cover image
-- [x] Architecture Media Gallery image
-- [x] FastAPI backend using both sponsor adapters
-- [x] Automated tests and CI
-- [x] Consent, crisis and public-social safety gates
+- [x] 1600×900 PNG cover image
+- [x] 1600×900 PNG architecture image
+- [x] Official Gloo OAuth2 client-credentials and Completions V2 adapter
+- [x] Official YouVersion passage and attribution adapter
+- [x] Local consent/crisis preflight before external calls
+- [x] Delivery timing and pseudonymous cooldown enforcement
+- [x] Automated API, OAuth and submission-asset tests
 - [x] Redacted live API evidence workflow
 
 ### Requires account credentials or manual upload
 
-- [ ] Confirm GitHub Pages URL loads publicly
-- [ ] Add Gloo and YouVersion repository secrets
+- [ ] Confirm GitHub Pages URL loads publicly in a logged-out browser
+- [ ] Add `GLOO_CLIENT_ID`, `GLOO_CLIENT_SECRET`, and `YVP_APP_KEY` repository secrets
+- [ ] Confirm the selected YouVersion Bible license is available to the App Key
 - [ ] Run live-evidence workflow and confirm `evidence/live-api-evidence.json` exists
-- [ ] Record the supplied 180-second experience
-- [ ] Upload video to YouTube as public or unlisted
-- [ ] Create or open the Kaggle writeup
+- [ ] Run video-render workflow and download the MP4 artifact
+- [ ] Upload MP4 and `video/captions.srt` to YouTube as public or unlisted
 - [ ] Attach the notebook to the Kaggle submission
-- [ ] Upload `media/cover.svg` and `media/architecture.svg` to Media Gallery
-- [ ] Replace submission video placeholder with the YouTube URL
+- [ ] Upload `media/cover.png` and `media/architecture.png` to Media Gallery
+- [ ] Add the YouTube URL to the Kaggle writeup
 - [ ] Submit the writeup; do not leave it as draft
 
 ## Truth rule
 
-Do not state that both sponsor APIs ran live until `evidence/live-api-evidence.json` exists. Demo mode is a reproducible product demonstration; the evidence file is the separate execution proof.
+Do not state that both sponsor APIs ran live until `evidence/live-api-evidence.json` exists and its `sponsor_calls_executed` value is exactly `["gloo", "youversion"]`. Demo mode is a reproducible product demonstration; the evidence file is the separate execution proof.
