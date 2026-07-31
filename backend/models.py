@@ -58,6 +58,7 @@ class ExperienceResponse(StrictModel):
     delivery_surface: str
     delivery_timing: str
     cooldown_seconds: int = Field(ge=0)
+    cooldown_remaining_seconds: int = Field(default=0, ge=0)
     cooldown_enforced: bool
     suppressed: bool
     suppression_reason: str | None = None
